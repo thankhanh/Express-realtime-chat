@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 # Dự án môn học: Các công nghệ lập trình hiện đại - Nghiên cứu sử dụng ExpressJS 💬
+=======
+# Dự án môn học: Các công nghệ lập trình hiện đại - Nghiên cứu sử dụng ExpressJS của sinh viên SGU (2025-2026 , nhóm 22 , thầy Vương) 💬
+>>>>>>> fcf920d92e96de3a9f2b0c12eb6671f52f0b5512
 
 ## 📝 Giới thiệu chung
 Dự án này là một hệ thống nhắn tin thời gian thực (Real-time Messaging Service) toàn diện, được phát triển và tối ưu hóa trong khuôn khổ môn học **Các công nghệ lập trình hiện đại**. Trong bối cảnh truyền thông số ngày càng phát triển, việc xây dựng một hệ thống có khả năng xử lý hàng nghìn kết nối đồng thời với độ trễ tối thiểu là một thách thức lớn về mặt kỹ thuật. 
@@ -111,13 +115,19 @@ Hệ thống được thiết kế theo mô hình **Client-Server** với sự k
 ## 👨‍🏫 Thông tin khóa học & Nhóm thực hiện
 *   **Môn học:** Các công nghệ lập trình hiện đại
 *   **Đề tài:** Nghiên cứu và xây dựng hệ thống Chat Real-time dựa trên kiến trúc Micro-services và WebSockets.
-*   **Nhóm thực hiện:** [Tên Nhóm / Team Name]
+*   **Nhóm thực hiện:** Nhóm CNCNLTHD-nhóm 22
 *   **Thành viên:**
-    1. Cao Tiến Cường - 3122410043
-    2. [Họ và Tên SV 2] - [MSSV]
-    3. [Họ và Tên SV 3] - [MSSV]
+    1. Hà Thanh Khánh - 3122410178
+    2. Cao Tiến Cường - 3122410043
+    3. Hà Văn Hưng - 3122410159
+    4. Lê Thế Minh - 31224100
+>>>>>>> fcf920d92e96de3a9f2b0c12eb6671f52f0b5512
 
 ---
 
 ## 📄 Giấy phép & Cam kết
+<<<<<<< HEAD
 Mã nguồn này được phát triển cho mục tiêu học thuật, nghiên cứu và báo cáo cuối kỳ của môn học. Mọi hành vi sao chép cho mục đích thương mại đều không được khuyến khích.
+=======
+Mã nguồn này được phát triển cho mục tiêu học thuật, nghiên cứu và báo cáo cuối kỳ của môn học. Mọi hành vi sao chép cho mục đích thương mại đều không được khuyến khích.  nghĩ ra cái tên cho repo này
+>>>>>>> fcf920d92e96de3a9f2b0c12eb6671f52f0b5512
