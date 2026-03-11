@@ -116,9 +116,10 @@ Hệ thống được thiết kế theo mô hình **Client-Server** với sự k
     1. Hà Thanh Khánh - 3122410178
     2. Cao Tiến Cường - 3122410043
     3. Hà Văn Hưng - 3122410159
-    4. MinhMafia- 
+    4. Lê Thế Minh - 31224100
 
 ---
 
 ## 📄 Giấy phép & Cam kết
-Mã nguồn này được phát triển cho mục tiêu học thuật, nghiên cứu và báo cáo cuối kỳ của môn học. Mọi hành vi sao chép cho mục đích thương mại đều không được khuyến khích.  nghĩ ra cái tên cho repo này
+
+Mã nguồn này được phát triển cho mục tiêu học thuật, nghiên cứu và báo cáo cuối kỳ của môn học. Mọi hành vi sao chép cho mục đích thương mại đều không được khuyến khích và nghĩ ra cái tên cho repo này
