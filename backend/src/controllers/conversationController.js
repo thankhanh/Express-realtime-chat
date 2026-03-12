@@ -1,4 +1,4 @@
-import getConversations from "../models/Conversation.js";
+import Conversation from "../models/Conversation.js";
 import Message from "../models/Message.js";
 
 export const createConversation = async (req, res) => {
@@ -24,14 +24,43 @@ export const createConversation = async (req, res) => {
                 participants: [{userId}, {userId: participantId}],
                 lastMessage: new Date(),
             });
+
+            await conversation.save();
         }
     }
 
-  }catch(error){
+    if(type === "group"){
+        conversation = new Conversation({
+            type: "group",
+            participants: [{userId},
+            ...memberIds.map((id) => ({userId: id}))],
+            group: {
+                name,
+                createBy: userId,
+            },
+            lastMessage: new Date(),
+        });
 
+        await conversation.save();
+    }
+
+    if(!conversation){
+        return res.status(400).json({message: "Conversation type không hợp lệ"});
+    }
+
+    await conversation.populate([
+        {path: "participants.userId", select: "displayName avatarUrl"},
+        {path: "seenBy", select: "displayName avatarUrl"},
+        {path: "lastMessage.senderId", select: "displayName avatarUrl"},
+    ]);
+
+    return res.status(201).json({conversation});
+
+  }catch(error){
+    console.error("Lỗi khi tạo conversation", error);
   }
 };
 
 export const getConversations = async (req, res) => {};
 
-export const getMessage = async (req, res) => {};
+export const getMessages = async (req, res) => {};
