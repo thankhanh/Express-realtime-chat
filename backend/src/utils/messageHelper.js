@@ -1,3 +1,4 @@
+//cập nhật thông tin của conversation sau khi tạo một message mới trong database
 export const updateConversationAfterCreateMessage = (
   conversation,
   message,
@@ -22,6 +23,7 @@ export const updateConversationAfterCreateMessage = (
   });
 };
 
+//gửi sự kiện realtime cho tất cả client trong conversation khi có tin nhắn mới
 export const emitNewMessage = (io, conversation, message) => {
   io.to(conversation._id.toString()).emit("new-message", {
     message,
