@@ -9,14 +9,14 @@ import conversationRoute from "./routes/conversationRoute.js";
 import cookieParser from "cookie-parser";
 import { protectedRoute } from "./middlewares/authMiddleware.js";
 import cors from "cors";
-// import swaggerUi from "swagger-ui-express";
+import swaggerUi from "swagger-ui-express";
 import fs from "fs";
-import {server } from "./socket/index.js";
-// import { v2 as cloudinary } from "cloudinary";
+import { app, server } from "./socket/index.js";
+import { v2 as cloudinary } from "cloudinary";
 
 dotenv.config();
 
-const app = express();
+// const app = express();
 const PORT = process.env.PORT || 5001;
 
 // middlewares
@@ -24,17 +24,17 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 
-// // CLOUDINARY Configuration
-// cloudinary.config({
-//   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-//   api_key: process.env.CLOUDINARY_API_KEY,
-//   api_secret: process.env.CLOUDINARY_API_SECRET,
-// });
+// CLOUDINARY Configuration
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 // swagger
 const swaggerDocument = JSON.parse(fs.readFileSync("./src/swagger.json", "utf8"));
 
-// app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // public routes
 app.use("/api/auth", authRoute);

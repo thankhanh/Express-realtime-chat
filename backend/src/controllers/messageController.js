@@ -68,6 +68,7 @@ export const sendGroupMessage = async (req, res) => {
       content,
     });
 
+    // Cập nhật thông tin cuộc trò chuyện
     updateConversationAfterCreateMessage(conversation, message, senderId);
 
     await conversation.save();
