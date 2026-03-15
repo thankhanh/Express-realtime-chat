@@ -180,6 +180,7 @@ export const getUserConversationsForSocketIO = async (userId) => {
   }
 };
 
+// Đánh dấu tin đã đọc
 export const markAsSeen = async (req, res) => {
   try {
     const { conversationId } = req.params;

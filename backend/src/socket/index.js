@@ -2,7 +2,7 @@ import { Server } from "socket.io";
 import http from "http";
 import express from "express";
 import { socketAuthMiddleware } from "../middlewares/socketMiddleware.js";
-//import { getUserConversationsForSocketIO } from "../controllers/conversationController.js";
+import { getUserConversationsForSocketIO } from "../controllers/conversationController.js";
 
 const app = express();
 
@@ -28,10 +28,10 @@ io.on("connection", async (socket) => {
 
   io.emit("online-users", Array.from(onlineUsers.keys()));
 
-  // const conversationIds = await getUserConversationsForSocketIO(user._id);
-  // conversationIds.forEach((id) => {
-  //   socket.join(id);
-  // });
+  const conversationIds = await getUserConversationsForSocketIO(user._id);
+  conversationIds.forEach((id) => {
+    socket.join(id);
+  });
 
   socket.on("join-conversation", (conversationId) => {
     socket.join(conversationId);
