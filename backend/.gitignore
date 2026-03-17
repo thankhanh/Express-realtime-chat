@@ -1,5 +1,8 @@
-node_modules
+node_modules/
 .env
-.DS_Store
-error.log
-error_utf8.log
+.env.local
+.env.*.local
+dist/
+build/
+*.log
+npm-debug.log*
