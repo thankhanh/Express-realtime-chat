@@ -1,95 +1,100 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-const participantsSchema = new mongoose.Schema({
+const participantsSchema = new mongoose.Schema(
+  {
     userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
     joinedAt: {
-    type: Date,
-    default: Date.now,
+      type: Date,
+      default: Date.now,
     },
   },
   {
     _id: false,
-  }
+  },
 );
 
-const groupSchema = new mongoose.Schema({
+const groupSchema = new mongoose.Schema(
+  {
     name: {
-    type: String,
-    trim: true,
+      type: String,
+      trim: true,
     },
     createBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
     },
-},
-{
+  },
+  {
     _id: false,
-});
-
-const lastMessageSchema = new mongoose.Schema({
-    _id: {type: String},
-    content: {
-    type: String,
-    default: null,
-    },
-    senderId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    },
-    createdAt: {
-    type: Date,
-    default: null,
-    },
-    },
-    {
-    _id: false,
-    }
+  },
 );
 
-const massageSchema = new mongoose.Schema({
-    type: {
-    type: String,
-    enum: ['text', 'image'],
-    required: true,
+const lastMessageSchema = new mongoose.Schema(
+  {
+    _id: { type: String },
+    content: {
+      type: String,
+      default: null,
+    },
+    senderId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+    createdAt: {
+      type: Date,
+      default: null,
+    },
   },
-  participants: {
-    type: [participantsSchema],
-    required: true,
+  {
+    _id: false,
   },
-  group:{
-    type: groupSchema,
-  },
-  lastMessageAt: {
-    type: Date,
-  },
-  seenBy: {
-    type: [mongoose.Schema.Types.ObjectId],
-    ref: 'User',
-  },
-  lastMessage: {
-    type: lastMessageSchema,
-    default: null,
-  },
-  unreadCounts:{
-    type: Map,
-    of: Number,
-    default: {},
-  }
-},
-{
-  timestamps: true,
+);
 
+const messageSchema = new mongoose.Schema(
+  {
+    type: {
+      type: String,
+      enum: ["text", "image"],
+      required: true,
+    },
+    participants: {
+      type: [participantsSchema],
+      required: true,
+    },
+    group: {
+      type: groupSchema,
+    },
+    lastMessageAt: {
+      type: Date,
+    },
+    seenBy: {
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: "User",
+    },
+    lastMessage: {
+      type: lastMessageSchema,
+      default: null,
+    },
+    unreadCounts: {
+      type: Map,
+      of: Number,
+      default: {},
+    },
+  },
+  {
+    timestamps: true,
+  },
+);
+
+conversationSchama.index({
+  "participant.userId": 1,
+  lastMessageAt: -1,
 });
 
-conversationSchama.index({ 
-    "participant.userId": 1,
-    lastMessageAt: -1,
- });
+const Concersation = mongoose.model("Conversation", conversationSchema);
 
- const Concersation = mongoose.model('Conversation', conversationSchema);
-
- export default Concersation;
+export default Concersation;
