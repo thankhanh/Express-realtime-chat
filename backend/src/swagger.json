@@ -1,9 +1,9 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "Moji",
+        "title": "Express-realtime-chat",
         "version": "1.0.0",
-        "description": ""
+        "description": "Realtime chat application with Express.js, Socket.IO, and MongoDB"
     },
     "servers": [
         {
