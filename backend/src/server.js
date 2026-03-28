@@ -7,7 +7,7 @@ import friendRoute from "./routes/friendRoute.js";
 // import messageRoute from "./routes/messageRoute.js";
 // import conversationRoute from "./routes/conversationRoute.js";
 import cookieParser from "cookie-parser";
-// import { protectedRoute } from "./middlewares/authMiddleware.js";
+import { protectedRoute } from "./middlewares/authMiddleware.js";
 // import cors from "cors";
 // import swaggerUi from "swagger-ui-express";
 // import fs from "fs";
@@ -42,7 +42,7 @@ app.use("/api/auth", authRoute);
 // private routes
 // app.use(protectedRoute);
 // app.use("/api/users", userRoute);
-app.use("api/friends", friendRoute);
+app.use("/api/friends", protectedRoute, friendRoute);
 // app.use("/api/messages", messageRoute);
 // app.use("/api/conversations", conversationRoute);
 

@@ -3,12 +3,12 @@ import mongoose from "mongoose";
 const friendRequestSchema = new mongoose.Schema(
   {
     from: {
-      type: mongoose.Schema.Type.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
     to: {
-      type: mongoose.Schema.Type.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
@@ -18,7 +18,7 @@ const friendRequestSchema = new mongoose.Schema(
     },
   },
   {
-    timestamp: true,
+    timestamps: true,
   },
 );
 
