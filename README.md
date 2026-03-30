@@ -118,7 +118,7 @@ Hệ thống được thiết kế theo mô hình **Client-Server** với sự k
     1. Hà Thanh Khánh - 3122410178
     2. Cao Tiến Cường - 3122410043
     3. Hà Văn Hưng - 3122410159
-    4. Lê Thế Minh - 31224100
+    4. Lê Thế Minh - 3122410239
 
 ---
 
