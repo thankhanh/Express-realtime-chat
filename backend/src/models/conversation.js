@@ -95,6 +95,6 @@ conversationSchama.index({
   lastMessageAt: -1,
 });
 
-const Concersation = mongoose.model("Conversation", conversationSchema);
+const Conversation = mongoose.model("Conversation", conversationSchema);
 
-export default Concersation;
+export default Conversation;

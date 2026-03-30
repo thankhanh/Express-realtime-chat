@@ -1,0 +1,219 @@
+914400 1207197
+914400 1207197
+TRƯỜNG ĐẠI HỌC SÀI GÒN KHOA CÔNG NGHỆ THÔNG TIN
+ĐỀ CƯƠNG CÔNG NGHỆ
+LẬP TRÌNH HIỆN ĐẠI
+TÌM HIỂU VÀ XÂY DỰNG
+DỊCH VỤ BACKEND VỚI EXPRESS
+Giảng Viên Hướng Dẫn : Phạm Thi Vương Nhóm Sinh Viên Thực Hiện
+Hà Thanh Khánh
+3122410178
+Hà Văn Hưng
+3122410159
+Cao Tiến Cường
+3122410043
+Lê Thế Minh
+3122410239
+Tháng 3/2026 - Thành Phố Hồ Chí Minh
+LỜI MỞ ĐẦU
+1. Lý do chọn đề tài:
+Express.js là một framework phổ biến được xây dựng trên nền tảng Node.js, hỗ trợ phát triển ứng dụng web và xây dựng RESTful API một cách nhanh chóng và hiệu quả. Việc lựa chọn Express.js để nghiên cứu xuất phát từ các lý do sau:
+Thứ nhất, Express.js có mức độ phổ biến cao và được sử dụng rộng rãi trong thực tế. Nhiều hệ thống backend, website và ứng dụng hiện nay sử dụng Express.js làm nền tảng chính, do đó việc tìm hiểu Express.js giúp sinh viên tiếp cận gần hơn với yêu cầu của thị trường lao động.
+Thứ hai, Express.js có cấu trúc đơn giản, dễ học và dễ triển khai, phù hợp cho người mới bắt đầu học backend. So với việc xây dựng server bằng Node.js thuần, Express.js giúp giảm bớt khối lượng mã nguồn, từ đó giúp người học tập trung hơn vào logic xử lý và nghiệp vụ của ứng dụng.
+Thứ ba, Express.js hỗ trợ xây dựng RESTful API hiệu quả, đây là mô hình kiến trúc được sử dụng phổ biến trong các hệ thống hiện đại như website, ứng dụng di động và các hệ thống phân tán. Việc nghiên cứu Express.js giúp sinh viên hiểu rõ hơn về cách xây dựng và quản lý API trong thực tế.
+Thứ tư, Express.js có cộng đồng lớn và tài liệu phong phú, giúp người học dễ dàng tìm kiếm tài liệu, ví dụ và giải pháp khi gặp khó khăn trong quá trình nghiên cứu và thực hành.
+Cuối cùng, Express.js có khả năng mở rộng linh hoạt, dễ dàng kết hợp với các công nghệ khác như MongoDB, MySQL, JWT, React,… Điều này giúp Express.js trở thành một lựa chọn phù hợp để nghiên cứu và phát triển các ứng dụng web hoàn chỉnh.
+2. Mục tiêu báo cáo:
+Mục tiêu của đề tài: là nghiên cứu và làm rõ vai trò của Express.js trong phát triển ứng dụng web backend trên nền tảng Node.js. Thông qua quá trình tìm hiểu lý thuyết và thực nghiệm, đề tài hướng đến việc:
+Hiểu rõ khái niệm, cấu trúc và nguyên lý hoạt động của Express.js.
+Nắm được cách xây dựng server và RESTful API bằng Express.js. Đánh giá ưu điểm, hạn chế và khả năng ứng dụng của Express.js trong thực tế.
+Định hướng phát triển kỹ năng lập trình backend phục vụ cho học tập và nghề nghiệp sau này.
+3. Phạm vi nghiên cứu:
+Trong phạm vi của báo cáo này, nhóm tập trung nghiên cứu và xây dựng một hệ thống backend cho ứng dụng chat thời gian thực sử dụng Express.js. Các module chức năng chính được phát triển bao gồm:
+Quản lý tài khoản người dùng: Cho phép đăng ký, đăng nhập và cập nhật thông tin cá nhân như tên hiển thị, ảnh đại diện và tiểu sử.
+Quản lý kết nối bạn bè: Hỗ trợ gửi lời mời kết bạn, chấp nhận hoặc từ chối yêu cầu và quản lý danh sách bạn bè.
+Nhắn tin thời gian thực: Cho phép người dùng gửi và nhận tin nhắn văn bản hoặc hình ảnh ngay lập tức thông qua công nghệ WebSocket.
+Quản lý hội thoại: Hỗ trợ tạo cuộc trò chuyện cá nhân (1-1) và trò chuyện nhóm, đồng thời lưu trữ và hiển thị lịch sử tin nhắn.
+Thông báo trạng thái hoạt động: Hiển thị trạng thái trực tuyến (Online/Offline) của người dùng trong danh sách bạn bè.
+4. Kế hoạch và Tiến độ thực hiện (Timeline):
+STT
+Nội dung
+Dự kiến thời gian thực hiện
+1
+Nghiên cứu tổng quan, lựa chọn đề tài và phân chia công việc
+1 tuần
+2
+Đọc tài liệu về Express.js, MongoDB, Socket.io
+1 tuần
+3
+Phân tích yêu cầu và thiết kế cơ sở dữ liệu, thiết kế luồng API
+1 tuần
+4
+Xây dựng Backend bằng Express.js (REST API, Auth, Middleware)
+2 tuần
+5
+Tích hợp Socket.io (Xử lý nhắn tin Real-time) vào Backend
+1 tuần
+6
+Xây dựng giao diện Frontend (React) và tích hợp gọi API
+2 tuần
+7
+Kiểm thử toàn hệ thống (Test API, Test Real-time, Fix Bugs)
+1 tuần
+8
+Viết báo cáo, hoàn thiện tiểu luận và chuẩn bị slide thuyết trình
+1 tuần
+5. Cấu trúc báo cáo:
+Tóm tắt
+Lý do nghiên cứu.
+Mục tiêu nghiên cứu.
+Phương pháp nguyên cứu.
+Kết quả đạt được.
+Chương 1: Tổng quan vấn đề
+1.1. Lý do chọn đề tài.
+1.2. Mục tiêu nghiên cứu.
+1.3. Phạm vi ứng dụng của đề tài.
+Chương 2: Cơ sở lý thuyết
+2.1. Tổng quan về Node.js và Framework Express.js.
+2.2. Kiến trúc RESTful API và mô hình MVC trong Express.
+2.3. Cơ sở dữ liệu NoSQL (MongoDB) và Mongoose.
+2.4. Công nghệ WebSockets và thư viện Socket.io.
+2.5. Cơ chế xác thực người dùng bằng JSON Web Token (JWT).
+Chương 3: Phân tích và thiết kế hệ thống
+3.1. Phân tích yêu cầu chức năng của Ứng dụng Chat.
+3.2. Thiết kế cơ sở dữ liệu (Lược đồ User, Message, Conversation, Friend).
+3.3. Thiết kế danh sách các API Endpoints.
+3.4. Cấu trúc thư mục của dự án (Backend & Frontend).
+Chương 4: Triển khai thực nghiệm ứng dụng
+4.1. Cài đặt và cấu hình Server Express.js .
+4.2. Triển khai các Module chính (Xác thực, Quản lý bạn bè, Quản lý hội thoại).
+4.3. Cài đặt luồng dữ liệu thời gian thực với Socket Middleware.
+4.4. Tích hợp giao diện người dùng (ReactJS) và Demo kết quả.
+Chương 5: Kết luận và hướng phát triển
+5.1. Tổng kết các kết quả đã đạt được (Về lý thuyết và sản phẩm).
+5.2. Hạn chế của ứng dụng hiện tại.
+5.3. Hướng phát triển trong tương lai (Thêm tính năng gọi Video/Audio, tối ưu tải, đưa lên môi trường Cloud).
+PHẦN 1: TỔNG QUAN VÀ PHÂN TÍCH CÔNG NGHỆ
+Chương 1: Giới thiệu về Express.js
+1. Lịch sử và Bối cảnh:
+Express.js ra đời vào năm 2010 bởi TJ Holowaychuk, lấy cảm hứng từ framework Sinatra của ngôn ngữ Ruby. Nó được thiết kế để giải quyết các vấn đề phức tạp khi xây dựng ứng dụng web bằng Node.js thuần (Vanilla Node.js).
+Vấn đề của Server-side truyền thống: Trước đây, việc xử lý các yêu cầu HTTP, quản lý route, và xử lý luồng dữ liệu (I/O) thường gây tốn kém tài nguyên do mô hình đa luồng (multi-threading).
+Giải pháp của Node.js & Express: Node.js giải quyết vấn đề bằng cơ chế Event Loop và Non-blocking I/O , cho phép xử lý hàng ngàn kết nối đồng thời trên một luồng duy nhất. Express.js đóng vai trò là một lớp trừu tượng (abstraction layer) mỏng, cung cấp các bộ tính năng mạnh mẽ để quản lý routing và middleware mà không làm mất đi hiệu năng vốn có của Node.js.
+2. Kiến trúc và Nguyên lý hoạt động:
+Express.js hoạt động dựa trên triết lý tối giản (minimalist) với mô hình Middleware Pipeline .
+Middleware Pipeline: Một yêu cầu (Request) đi từ máy khách đến máy chủ sẽ đi qua một chuỗi các hàm trung gian (Middleware). Mỗi middleware có quyền truy cập vào đối tượng yêu cầu ( req ), đối tượng phản hồi ( res ), và hàm next() để chuyển quyền điều khiển sang middleware tiếp theo.
+Event Loop: Express tận dụng tối đa cơ chế vòng lặp sự kiện của Node.js để xử lý các tác vụ không đồng bộ (Asynchronous), giúp hệ thống chat thời gian thực hoạt động mượt mà.
+Hệ sinh thái: Dự án sử dụng các thành phần cốt lõi như:
+Mongoose (ODM): Quản lý kết nối và thao tác dữ liệu với MongoDB.
+Socket.io: Xử lý truyền tải dữ liệu hai chiều thời gian thực.
+Cloudinary: Lưu trữ và quản lý tài nguyên hình ảnh (Avatar, tin nhắn ảnh).
+3. So sánh và Đánh giá (Critical Thinking):
+So sánh NestJS vs Express: NestJS cung cấp cấu trúc chặt chẽ (Opinions) dựa trên TypeScript và Dependency Injection, phù hợp cho dự án doanh nghiệp lớn. Ngược lại, Express mang lại sự tự do tuyệt đối, nhẹ nhàng và dễ dàng tích hợp, rất phù hợp cho các ứng dụng cần tốc độ phát triển nhanh như Chat App.
+So sánh Go vs Node.js/Express: Go có lợi thế về tính toán song song (Concurrency) nhờ Goroutines, nhưng Node.js/Express lại có cộng đồng package (NPM) vô cùng đồ sộ và cực kỳ hiệu quả trong việc xử lý các ứng dụng hướng sự kiện (Event-driven) như nhắn tin.
+Trade-off: Lựa chọn Express cho dự án này vì tính linh hoạt cao và khả năng tích hợp Socket.io rất đơn giản, giúp tối ưu hóa thời gian triển khai ứng dụng thời gian thực.
+Chương 2: Cơ hội nghề nghiệp (Backend Developer)
+1. Vị trí công việc: Nắm vững Express.js cho phép đảm nhận các vị trí: Backend Developer (Node.js tập trung), Fullstack Developer (kết hợp ReactJS), hoặc Software Engineer chuyên về kiến trúc Real-time.
+2. Nhu cầu tuyển dụng & Mức lương: Hiện nay, JavaScript/Node.js luôn nằm trong top các ngôn ngữ được săn đón nhất. Nhu cầu xây dựng các dịch vụ vi mô (Microservices) và ứng dụng Single Page (SPA) khiến Express.js trở thành kỹ năng bắt buộc đối với các Backend Developer hiện đại.
+PHẦN 2: KIẾN THỨC CỐT LÕI VÀ THỰC HÀNH
+Mục tiêu: Chứng minh năng lực kỹ thuật qua quy trình: Lý thuyết -> Minh họa -> Code -> Kết quả API.
+Chương 3: Thiết lập môi trường và Kiến trúc hệ thống
+1. Công cụ cần thiết:
+IDE : Visual Studio Code (với các extension cho JavaScript/ES6).
+Postman : Dùng để kiểm thử các API Endpoints (Auth, User, Friend).
+Database Client : MongoDB Compass hoặc sử dụng trực tiếp Atlas Cloud.
+Môi trường : Node.js (phiên bản v18 trở lên) và NPM.
+2. Cài đặt & Khởi tạo:
+Quy trình khởi tạo dự án thực tế:
+Khởi tạo package.json bằng lệnh npm init .
+Cài đặt các thư viện lõi: express , mongoose , dotenv , cookie-parser , cors , socket.io .
+Cấu hình biến môi trường trong file .env (PORT, MONGODB_URI , JWT_SECRET , CLOUDINARY_URL).
+3. Phân tích cấu trúc thư mục (QUAN TRỌNG):
+Cây thư mục dự án
+Models : Chứa các Schema định nghĩa cấu trúc dữ liệu lưu trữ trong MongoDB thông qua Mongoose, ví dụ như thông tin người dùng ( User.js ), tin nhắn ( Message.js ), và hội thoại ( Conversation.js ).
+Controllers : Tiếp nhận các yêu cầu (Request) từ Routes, thực hiện gọi đến Models để truy vấn hoặc cập nhật dữ liệu và trả về phản hồi (Response) cho Client.
+Routes : Đóng vai trò là bộ phận điều hướng hệ thống, xác định cụ thể URL Endpoint nào sẽ được xử lý bởi hàm nào trong Controller tương ứng.
+Middlewares : Thực hiện các nhiệm vụ kiểm soát và tiền xử lý, chẳng hạn như xác thực người dùng đã đăng nhập qua JWT ( authMiddleware.js ) hoặc kiểm tra quan hệ bạn bè trước khi cho phép gửi tin nhắn ( friendMiddleware.js ).
+Dự án áp dụng kiến trúc Modular , mang lại các ưu điểm quan trọng cho quá trình phát triển lâu dài:
+Dễ bảo trì : Các thành phần được tách biệt giúp việc tìm lỗi và sửa lỗi diễn ra cục bộ, không ảnh hưởng đến toàn bộ hệ thống.
+Khả năng mở rộng : Việc thêm các tính năng mới như gọi điện video hoặc gửi tệp tin có thể thực hiện bằng cách thêm các module Controller/Route mới mà không làm thay đổi các mã nguồn cũ đã ổn định.
+Tái sử dụng code : Các middleware xác thực hoặc helper xử lý tin nhắn có thể được dùng chung cho nhiều API khác nhau.
+4. Bài tập ứng dụng (Khởi tạo):
+○ Minh chứng file cấu hình (appsettings.json, .env, Dockerfile...).
+Chương 4: Các khái niệm nền tảng (Fundamentals)
+(Trình bày các concept quan trọng nhất của Backend)
+1. Lý thuyết: Giải thích các khái niệm như Routing, Controller, Middleware, Dependency
+Injection.
+2. Code minh họa: Snippet code xử lý Request/Response.
+3. Bài tập ứng dụng (CRUD cơ bản):
+○ Xây dựng các API Thêm/Xóa/Sửa cơ bản.
+○ Minh chứng: Ảnh chụp Postman/Swagger gọi API thành công (Request JSON body
+& Response JSON status 200/201).
+Chương 5, 6...: Các kỹ thuật nâng cao và Tối ưu hóa Backend
+(Khuyến khích các chủ đề sau)
+1. Kết nối Cơ sở dữ liệu (ORM/ODM):
+○ Sử dụng Entity Framework, TypeORM, Prisma, GORM...
+○ Bài tập: Thiết kế Entity, thực hiện Migration DB.
+2. Bảo mật và Xác thực (Authentication/Authorization):
+○ Lý thuyết về JWT, OAuth2, Hashing Password.
+○ Bài tập: API Đăng ký, Đăng nhập trả về Token, Middleware chặn API cần quyền admin.
+3. Tối ưu hiệu năng & Xử lý nền (Performance):
+○ Caching (Redis), Background Jobs (Queue), Indexing Database.
+○ Minh chứng: Ảnh chụp thời gian phản hồi (Response Time) giảm xuống sau khi dùng
+Cache/Index.
+PHẦN 3: XÂY DỰNG HỆ THỐNG DỊCH VỤ TỔNG HỢP
+Mục tiêu: Lắp ghép các API lẻ ở Phần 2 thành một hệ thống Backend hoàn chỉnh phục vụ bài toán thực tế.
+Chương 11: Phân tích và Thiết kế hệ thống (System Design)
+1. Mô tả bài toán: Hệ thống phục vụ nghiệp vụ gì?
+2. Thiết kế Cơ sở dữ liệu (Database Design - BẮT BUỘC):
+○ Sơ đồ ERD (Entity Relationship Diagram): Quan hệ giữa các bảng.
+3. Thiết kế API (API Specification):
+○ Danh sách các Endpoints chính (Method, URL, Description).
+Chương 12: Triển khai và Kiểm thử API
+1. Tích hợp Logic nghiệp vụ (Business Logic):
+○ Mô tả cách các Service gọi nhau, cách xử lý Transaction (đảm bảo tính toàn vẹn dữ
+liệu).
+○ Minh chứng: Code xử lý nghiệp vụ phức tạp.
+2. Kết quả đạt được (Minh chứng sản phẩm):
+○ Bắt buộc:
+■ Link Swagger UI (hoặc ảnh chụp toàn bộ danh sách API trên Swagger).
+■ Ảnh chụp Postman Collection Runner (chạy test hàng loạt API).
+■ Ảnh chụp Dữ liệu trong Database đã được sinh ra từ quá trình test.
+3. Hướng dẫn cài đặt (Deployment): Hướng dẫn chạy server, restore database (hoặc file
+docker-compose.yml để chạy nhanh).
+PHẦN 4: TỔNG KẾT VÀ BÀI HỌC KINH NGHIỆM
+Chương 13: Đánh giá và Nhìn lại
+1. So sánh với mục tiêu ban đầu: Đã làm được bao nhiêu % so với dự định?
+2. Phân tích lỗi (Bug Reports - Quan trọng):
+○ Liệt kê 1-2 lỗi khó khăn/thú vị nhất.
+○ Minh chứng: Ảnh chụp lỗi (Log đỏ, giao diện vỡ...) và đoạn code đã sửa.
+Chương 14: Hướng phát triển
+● Cải tiến sản phẩm: Nếu có thêm thời gian, sẽ nâng cấp tính năng gì?
+● Định hướng bản thân: Kế hoạch tiếp theo để nâng cao trình độ công nghệ này.
+TÀI LIỆU THAM KHẢO
+● Liệt kê sách, trang web, khóa học, tài liệu chính hãng (Documentation) đã sử dụng.
+Phụ lục 1: Nhật ký công việc (Weekly Log Summary)
+(Sinh viên tóm tắt bảng công việc hàng tuần vào đây để giảng viên tiện theo dõi mà không cần mở file Excel riêng)
+● Tuần 1: [Tên công việc] - [Người làm] - [Trạng thái]
+● Tuần 2: ...
+● Tuần ...: ...
+Phụ lục 2: Minh chứng làm việc nhóm (Git History)
+● Yêu cầu: Chụp ảnh màn hình trang Insights/Contributors trên GitHub/GitLab thể hiện biểu đồ đóng góp của các thành viên.
+● Chụp ảnh màn hình lịch sử commit (khoảng 10-20 commit gần nhất).
+QUY ĐỊNH VỀ TỔ CHỨC NHÓM VÀ NỘP BÀI
+1. Thành phần nhóm
+● Mỗi nhóm gồm 3-4 sinh viên .
+● Nhóm tự bầu chọn Nhóm trưởng (Leader) để điều phối công việc.
+● Yêu cầu lập Bảng phân công công việc , ghi rõ ai làm module nào.
+2. Theo dõi tiến độ (Weekly Report)
+● Để đảm bảo tính công bằng và theo dõi quá trình, nhóm phải cập nhật tiến độ hàng tuần .
+● Hình thức: File Excel/Google Sheet hoặc các công cụ quản lý dự án (Trello/Jira/Notion).
+● Nội dung báo cáo tuần cần có: Tuần thứ mấy, Công việc đã làm, Dự kiến tuần sau, Khó
+khăn, Người thực hiện.
+3. Yêu cầu bộ hồ sơ nộp cuối kỳ
+Sinh viên nộp 1 file nén (.zip/.rar) bao gồm:
+1. Báo cáo toàn văn (File PDF): Trình bày theo cấu trúc bên trên (Bao gồm cả phần Phụ lục minh chứng).
+2. File theo dõi tiến độ tuần (Excel/Link Sheet): Bản chi tiết.
+3. Mã nguồn (Source Code): Link GitHub/GitLab hoặc file nén.
+4. Slide thuyết trình: Tóm tắt các ý chính.
+5. Video Demo (Khuyến khích): Video ngắn (2-3 phút) quay lại màn hình thao tác.
+6. Bảng đánh giá mức độ đóng góp: Tự đánh giá % đóng góp (có chữ ký).
