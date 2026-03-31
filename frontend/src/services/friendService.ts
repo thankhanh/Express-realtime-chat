@@ -3,7 +3,7 @@ import api from "@/lib/axios";
 export const friendService = {
   async searchByUsername(username: string) {
     const res = await api.get(`/users/search?username=${username}`);
-    return res.data.user;
+    return res.data.users as import("@/types/user").User[]; // backend trả mảng (regex, max 10)
   },
 
   async sendFriendRequest(to: string, message?: string) {

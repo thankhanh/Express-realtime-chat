@@ -24,7 +24,7 @@ io.on("connection", async (socket) => {
 
     console.log(`${user.displayName} online với socket ${socket.id}`);
 
-    onlineUsers.set(user._id, socket.id);
+    onlineUsers.set(user._id.toString(), socket.id);
 
     io.emit("online-users", Array.from(onlineUsers.keys()));
 
@@ -37,10 +37,27 @@ io.on("connection", async (socket) => {
         socket.join(conversationId);
     });
 
+    // ── Typing Indicator ──────────────────────────────
+    socket.on("typing", ({ conversationId }) => {
+        socket.to(conversationId).emit("user-typing", {
+            userId: user._id,
+            displayName: user.displayName,
+            conversationId,
+        });
+    });
+
+    socket.on("stop-typing", ({ conversationId }) => {
+        socket.to(conversationId).emit("user-stop-typing", {
+            userId: user._id,
+            conversationId,
+        });
+    });
+    // ─────────────────────────────────────────────────
+
     socket.join(user._id.toString());
 
     socket.on("disconnect", () => {
-        onlineUsers.delete(user._id);
+        onlineUsers.delete(user._id.toString());
         io.emit("online-users", Array.from(onlineUsers.keys()));
         console.log(`socket disconnected: ${socket.id}`);
     });

@@ -2,7 +2,7 @@ import { friendService } from "@/services/friendService";
 import type { FriendState } from "@/types/store";
 import { create } from "zustand";
 
-export const useFriendStore = create<FriendState>((set, get) => ({
+export const useFriendStore = create<FriendState>((set) => ({
   friends: [],
   loading: false,
   receivedList: [],
@@ -10,13 +10,11 @@ export const useFriendStore = create<FriendState>((set, get) => ({
   searchByUsername: async (username) => {
     try {
       set({ loading: true });
-
-      const user = await friendService.searchByUsername(username);
-
-      return user;
+      const users = await friendService.searchByUsername(username);
+      return users;
     } catch (error) {
       console.error("Lỗi xảy ra khi tìm user bằng username", error);
-      return null;
+      return [];
     } finally {
       set({ loading: false });
     }

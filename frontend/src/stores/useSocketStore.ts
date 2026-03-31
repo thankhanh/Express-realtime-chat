@@ -9,6 +9,7 @@ const baseURL = import.meta.env.VITE_SOCKET_URL;
 export const useSocketStore = create<SocketState>((set, get) => ({
   socket: null,
   onlineUsers: [],
+
   connectSocket: () => {
     const accessToken = useAuthStore.getState().accessToken;
     const existingSocket = get().socket;
@@ -26,12 +27,12 @@ export const useSocketStore = create<SocketState>((set, get) => ({
       console.log("Đã kết nối với socket");
     });
 
-    // online users
-    socket.on("online-users", (userIds) => {
+    // ── Online Users ────────────────────────────────────────
+    socket.on("online-users", (userIds: string[]) => {
       set({ onlineUsers: userIds });
     });
 
-    // new message
+    // ── New Message ─────────────────────────────────────────
     socket.on("new-message", ({ message, conversation, unreadCounts }) => {
       useChatStore.getState().addMessage(message);
 
@@ -52,14 +53,30 @@ export const useSocketStore = create<SocketState>((set, get) => ({
         unreadCounts,
       };
 
-      if (useChatStore.getState().activeConversationId === message.conversationId) {
+      if (
+        useChatStore.getState().activeConversationId === message.conversationId
+      ) {
         useChatStore.getState().markAsSeen();
       }
 
       useChatStore.getState().updateConversation(updatedConversation);
     });
 
-    // read message
+    // ── Delete / Thu hồi Message ────────────────────────────
+    socket.on(
+      "delete-message",
+      ({
+        messageId,
+        conversationId,
+      }: {
+        messageId: string;
+        conversationId: string;
+      }) => {
+        useChatStore.getState().deleteMessageLocally(messageId, conversationId);
+      }
+    );
+
+    // ── Read Message ────────────────────────────────────────
     socket.on("read-message", ({ conversation, lastMessage }) => {
       const updated = {
         _id: conversation._id,
@@ -72,12 +89,85 @@ export const useSocketStore = create<SocketState>((set, get) => ({
       useChatStore.getState().updateConversation(updated);
     });
 
-    // new group chat
+    // ── New Group ───────────────────────────────────────────
     socket.on("new-group", (conversation) => {
       useChatStore.getState().addConvo(conversation);
       socket.emit("join-conversation", conversation._id);
     });
+
+    // ── Typing Indicator ────────────────────────────────────
+    socket.on(
+      "user-typing",
+      ({
+        userId,
+        displayName,
+        conversationId,
+      }: {
+        userId: string;
+        displayName: string;
+        conversationId: string;
+      }) => {
+        useChatStore.getState().setTypingUser(conversationId, { userId, displayName });
+      }
+    );
+
+    socket.on(
+      "user-stop-typing",
+      ({
+        userId,
+        conversationId,
+      }: {
+        userId: string;
+        conversationId: string;
+      }) => {
+        useChatStore.getState().removeTypingUser(conversationId, userId);
+      }
+    );
+
+    // ── Group Management ────────────────────────────────────
+    socket.on(
+      "member-left",
+      ({ conversationId, userId }: { conversationId: string; userId: string }) => {
+        useChatStore.getState().updateConversation({
+          _id: conversationId,
+          // Lọc participant rời đi (cập nhật minimal, fetchConversations sẽ refresh)
+          _memberLeft: userId,
+        });
+        // Refresh danh sách conversations để đồng bộ participants
+        useChatStore.getState().fetchConversations();
+      }
+    );
+
+    socket.on("member-added", () => {
+      useChatStore.getState().fetchConversations();
+    });
+
+    socket.on("added-to-group", ({ conversationId }: { conversationId: string }) => {
+      useChatStore.getState().fetchConversations();
+      socket.emit("join-conversation", conversationId);
+    });
+
+    socket.on("member-removed", () => {
+      useChatStore.getState().fetchConversations();
+    });
+
+    socket.on(
+      "group-updated",
+      ({
+        conversationId,
+        name,
+      }: {
+        conversationId: string;
+        name: string;
+      }) => {
+        useChatStore.getState().updateConversation({
+          _id: conversationId,
+          group: { name },
+        });
+      }
+    );
   },
+
   disconnectSocket: () => {
     const socket = get().socket;
     if (socket) {
