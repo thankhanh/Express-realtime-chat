@@ -18,7 +18,16 @@ const messageSchema = new mongoose.Schema(
             trim: true,
         },
         imgUrl: {
-            type: String,
+            type: String, // URL ảnh từ Cloudinary
+        },
+        replyTo: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Message",
+            default: null, // null = không phải reply
+        },
+        isDeleted: {
+            type: Boolean,
+            default: false, // soft delete — không xóa khỏi DB
         },
     },
     {

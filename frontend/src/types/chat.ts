@@ -50,6 +50,8 @@ export interface Message {
   senderId: string;
   content: string | null;
   imgUrl?: string | null;
+  replyTo?: Message | null;   // tin nhắn được reply (đã populate)
+  isDeleted?: boolean;        // soft delete — nội dung đã bị thu hồi
   updatedAt?: string | null;
   createdAt: string;
   isOwn?: boolean;

@@ -35,14 +35,15 @@ export interface ChatState {
     string,
     {
       items: Message[];
-      hasMore: boolean; // infinite-scroll
-      nextCursor?: string | null; // phân trang
+      hasMore: boolean;
+      nextCursor?: string | null;
     }
   >;
   activeConversationId: string | null;
   convoLoading: boolean;
   messageLoading: boolean;
   loading: boolean;
+  typingUsers: Record<string, { userId: string; displayName: string }[]>; // conversationId → typing users
   reset: () => void;
 
   setActiveConversation: (id: string | null) => void;
@@ -58,9 +59,10 @@ export interface ChatState {
     content: string,
     imgUrl?: string
   ) => Promise<void>;
-  // add message
+  sendImageMessage: (file: File, conversationId?: string, recipientId?: string) => Promise<void>;
+  deleteMessage: (messageId: string, conversationId: string) => Promise<void>;
   addMessage: (message: Message) => Promise<void>;
-  // update convo
+  deleteMessageLocally: (messageId: string, conversationId: string) => void;
   updateConversation: (conversation: unknown) => void;
   markAsSeen: () => Promise<void>;
   addConvo: (convo: Conversation) => void;
@@ -69,6 +71,8 @@ export interface ChatState {
     name: string,
     memberIds: string[]
   ) => Promise<void>;
+  setTypingUser: (conversationId: string, user: { userId: string; displayName: string }) => void;
+  removeTypingUser: (conversationId: string, userId: string) => void;
 }
 
 export interface SocketState {
@@ -83,7 +87,7 @@ export interface FriendState {
   loading: boolean;
   receivedList: FriendRequest[];
   sentList: FriendRequest[];
-  searchByUsername: (username: string) => Promise<User | null>;
+  searchByUsername: (username: string) => Promise<User[]>; // trả về mảng (regex search)
   addFriend: (to: string, message?: string) => Promise<string>;
   getAllFriendRequests: () => Promise<void>;
   acceptRequest: (requestId: string) => Promise<void>;

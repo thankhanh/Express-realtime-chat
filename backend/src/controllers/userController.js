@@ -22,11 +22,14 @@ export const searchUserByUsername = async (req, res) => {
             return res.status(400).json({ message: "Cần cung cấp username trong query." });
         }
 
-        const user = await User.findOne({ username }).select(
-            "_id displayName username avatarUrl"
-        );
+        // Dùng regex để tìm gợi ý: gõ "kha" ra "khanh", "khang", ...
+        const users = await User.find({
+            username: { $regex: username.trim(), $options: "i" },
+        })
+            .select("_id displayName username avatarUrl")
+            .limit(10); // giới hạn 10 kết quả
 
-        return res.status(200).json({ user });
+        return res.status(200).json({ users });
     } catch (error) {
         console.error("Lỗi xảy ra khi searchUserByUsername", error);
         return res.status(500).json({ message: "Lỗi hệ thống" });
