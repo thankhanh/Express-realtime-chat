@@ -38,7 +38,9 @@ api.interceptors.response.use(
       originalRequest._retryCount += 1;
 
       try {
-        const res = await api.post("/auth/refresh", { withCredentials: true });
+        const res = await api.post("/auth/refresh", null, {
+          withCredentials: true,
+        });
         const newAccessToken = res.data.accessToken;
 
         useAuthStore.getState().setAccessToken(newAccessToken);
@@ -52,7 +54,7 @@ api.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  }
+  },
 );
 
 export default api;

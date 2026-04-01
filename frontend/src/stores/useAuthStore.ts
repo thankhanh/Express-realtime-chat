@@ -4,6 +4,7 @@ import { authService } from "@/services/authService";
 import type { AuthState } from "@/types/store";
 import { persist } from "zustand/middleware";
 import { useChatStore } from "./useChatStore";
+import axios from "axios";
 
 export const useAuthStore = create<AuthState>()(
   persist(
@@ -29,14 +30,27 @@ export const useAuthStore = create<AuthState>()(
           set({ loading: true });
 
           //  gọi api
-          await authService.signUp(username, password, email, firstName, lastName);
+          await authService.signUp(
+            username,
+            password,
+            email,
+            firstName,
+            lastName,
+          );
 
           toast.success(
-            "Đăng ký thành công! Bạn sẽ được chuyển sang trang đăng nhập."
+            "Đăng ký thành công! Bạn sẽ được chuyển sang trang đăng nhập.",
           );
         } catch (error) {
           console.error(error);
-          toast.error("Đăng ký không thành công");
+
+          const errorMessage =
+            axios.isAxiosError(error) && error.response?.data?.message
+              ? error.response.data.message
+              : "Đăng ký không thành công";
+
+          toast.error(errorMessage);
+          throw error;
         } finally {
           set({ loading: false });
         }
@@ -107,6 +121,6 @@ export const useAuthStore = create<AuthState>()(
     {
       name: "auth-storage",
       partialize: (state) => ({ user: state.user }), // chỉ persist user
-    }
-  )
+    },
+  ),
 );
