@@ -268,7 +268,6 @@ export const uploadImageFromBuffer = (buffer, options = {}) => {
 2. Lắng nghe event `connection` → in ra `"Client đã kết nối: <socketId>"`.
 3. Lắng nghe event `disconnect` → in ra `"Client đã ngắt kết nối"`.
 4. Trong `server.js`, export và dùng `server.listen()` thay vì `app.listen()`.
-5. **Kiểm tra:** Dùng [socket.io client test](https://amritb.github.io/socketio-client-tool/) để kết nối và xem log trên terminal.
 
 ---
 
