@@ -1,8 +1,8 @@
 import { useAuthStore } from "@/stores/useAuthStore";
 import type { Conversation } from "@/types/chat";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
-import { ImagePlus, Send } from "lucide-react";
+import { ImagePlus, Send, X } from "lucide-react";
 import { Input } from "../ui/input";
 import EmojiPicker from "./EmojiPicker";
 import { useChatStore } from "@/stores/useChatStore";
@@ -10,29 +10,43 @@ import { toast } from "sonner";
 
 const MessageInput = ({ selectedConvo }: { selectedConvo: Conversation }) => {
   const { user } = useAuthStore();
-  const { sendDirectMessage, sendGroupMessage } = useChatStore();
+  const {
+    sendDirectMessage,
+    sendGroupMessage,
+    sendImageMessage,
+    replyingMessage,
+    clearReplyingMessage,
+  } = useChatStore();
   const [value, setValue] = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   if (!user) return;
 
   const sendMessage = async () => {
     if (!value.trim()) return;
     const currValue = value;
+    const replyToId = replyingMessage?._id;
     setValue("");
 
     try {
       if (selectedConvo.type === "direct") {
         const participants = selectedConvo.participants;
         const otherUser = participants.filter((p) => p._id !== user._id)[0];
-        await sendDirectMessage(otherUser._id, currValue);
+        await sendDirectMessage(otherUser._id, currValue, undefined, replyToId);
       } else {
-        await sendGroupMessage(selectedConvo._id, currValue);
+        await sendGroupMessage(selectedConvo._id, currValue, undefined, replyToId);
       }
+
+      clearReplyingMessage();
     } catch (error) {
       console.error(error);
       toast.error("Lỗi xảy ra khi gửi tin nhắn. Bạn hãy thử lại!");
     }
   };
+
+  useEffect(() => {
+    clearReplyingMessage();
+  }, [clearReplyingMessage, selectedConvo._id]);
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
@@ -41,12 +55,72 @@ const MessageInput = ({ selectedConvo }: { selectedConvo: Conversation }) => {
     }
   };
 
+  const handleOpenFilePicker = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleSelectImage = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    try {
+      if (selectedConvo.type === "direct") {
+        const participants = selectedConvo.participants;
+        const otherUser = participants.filter((p) => p._id !== user._id)[0];
+        await sendImageMessage(file, selectedConvo._id, otherUser?._id);
+      } else {
+        await sendImageMessage(file, selectedConvo._id);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Không thể gửi ảnh. Bạn hãy thử lại!");
+    } finally {
+      event.target.value = "";
+    }
+  };
+
   return (
-    <div className="flex items-center gap-2 p-3 min-h-[56px] bg-background">
+    <div className="p-3 bg-background">
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={handleSelectImage}
+      />
+
+      {replyingMessage && (
+        <div className="mb-2 rounded-md border border-primary/20 bg-primary/5 px-3 py-2">
+          <div className="flex items-start justify-between gap-2">
+            <div className="min-w-0">
+              <p className="text-xs font-medium text-primary">Đang trả lời</p>
+              <p className="text-xs text-muted-foreground break-words">
+                {replyingMessage.isDeleted
+                  ? "Tin nhắn đã bị thu hồi"
+                  : replyingMessage.content || "[Tin nhắn ảnh]"}
+              </p>
+            </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="size-7"
+              onClick={clearReplyingMessage}
+            >
+              <X className="size-4" />
+            </Button>
+          </div>
+        </div>
+      )}
+
+      <div className="flex items-center gap-2 min-h-[56px]">
       <Button
         variant="ghost"
         size="icon"
         className="hover:bg-primary/10 transition-smooth"
+        onClick={handleOpenFilePicker}
       >
         <ImagePlus className="size-4" />
       </Button>
@@ -82,6 +156,7 @@ const MessageInput = ({ selectedConvo }: { selectedConvo: Conversation }) => {
       >
         <Send className="size-4 text-white" />
       </Button>
+      </div>
     </div>
   );
 };

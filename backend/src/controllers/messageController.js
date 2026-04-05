@@ -6,6 +6,8 @@ import {
 } from "../utils/messageHelper.js";
 import { io } from "../socket/index.js";
 import { uploadImageFromBuffer } from "../middlewares/uploadMiddleware.js";
+import fs from "fs/promises";
+import path from "path";
 
 // ─────────────────────────────────────────────
 // Gửi tin nhắn trực tiếp (Direct)
@@ -100,15 +102,35 @@ export const sendImageMessage = async (req, res) => {
         const { conversationId, recipientId, replyTo } = req.body;
         const senderId = req.user._id;
 
+        console.log("📸 sendImageMessage - file:", file ? `${file.size} bytes` : "null");
+        console.log("📸 conversationId:", conversationId, "recipientId:", recipientId);
+
         if (!file) {
             return res.status(400).json({ message: "Không có file được upload" });
         }
 
-        // Upload ảnh lên Cloudinary
-        const result = await uploadImageFromBuffer(file.buffer, {
-            folder: "CCNLTHD/messages",
-            transformation: [{ width: 800, quality: "auto", crop: "limit" }],
-        });
+        // Upload ảnh lên Cloudinary, fallback sang local nếu cấu hình Cloudinary lỗi
+        console.log("📸 Uploading to Cloudinary...");
+        let imageUrl = "";
+        try {
+            const result = await uploadImageFromBuffer(file.buffer, {
+                folder: "CCNLTHD/messages",
+                transformation: [{ width: 800, quality: "auto", crop: "limit" }],
+            });
+            imageUrl = result.secure_url;
+            console.log("📸 Cloudinary result:", imageUrl);
+        } catch (cloudinaryError) {
+            console.warn("⚠️ Cloudinary upload failed, fallback to local storage:", cloudinaryError?.message);
+
+            const ext = path.extname(file.originalname || "") || ".jpg";
+            const fileName = `${Date.now()}-${Math.round(Math.random() * 1e9)}${ext}`;
+            const uploadDir = path.join(process.cwd(), "uploads", "messages");
+            await fs.mkdir(uploadDir, { recursive: true });
+            await fs.writeFile(path.join(uploadDir, fileName), file.buffer);
+
+            imageUrl = `${req.protocol}://${req.get("host")}/uploads/messages/${fileName}`;
+            console.log("📸 Local fallback result:", imageUrl);
+        }
 
         let conversation;
 
@@ -117,6 +139,7 @@ export const sendImageMessage = async (req, res) => {
         }
 
         if (!conversation && recipientId) {
+            console.log("📸 Creating new conversation...");
             conversation = await Conversation.create({
                 type: "direct",
                 participants: [
@@ -135,7 +158,7 @@ export const sendImageMessage = async (req, res) => {
         const message = await Message.create({
             conversationId: conversation._id,
             senderId,
-            imgUrl: result.secure_url,
+            imgUrl: imageUrl,
             replyTo: replyTo || null,
         });
 
@@ -143,10 +166,23 @@ export const sendImageMessage = async (req, res) => {
         await conversation.save();
         emitNewMessage(io, conversation, message);
 
+        console.log("📸 Image message created successfully:", message._id);
         return res.status(201).json({ message });
     } catch (error) {
-        console.error("Lỗi xảy ra khi gửi ảnh", error);
-        return res.status(500).json({ message: "Lỗi hệ thống" });
+        const errorMessage = error?.message || "Lỗi không xác định";
+        console.error("❌ Lỗi xảy ra khi gửi ảnh:", errorMessage);
+        console.error("Stack:", error?.stack);
+
+        const normalized = errorMessage.toLowerCase();
+        if (
+            normalized.includes("upload preset not found") ||
+            normalized.includes("invalid signature") ||
+            normalized.includes("cloudinary")
+        ) {
+            return res.status(400).json({ message: "Lỗi cấu hình Cloudinary: " + errorMessage });
+        }
+
+        return res.status(500).json({ message: "Lỗi hệ thống: " + errorMessage });
     }
 };
 

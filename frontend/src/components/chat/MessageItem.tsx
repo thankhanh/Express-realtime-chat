@@ -3,6 +3,14 @@ import type { Conversation, Message, Participant } from "@/types/chat";
 import UserAvatar from "./UserAvatar";
 import { Card } from "../ui/card";
 import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+import { EllipsisVertical, Reply, Trash2 } from "lucide-react";
 
 interface MessageItemProps {
   message: Message;
@@ -10,6 +18,8 @@ interface MessageItemProps {
   messages: Message[];
   selectedConvo: Conversation;
   lastMessageStatus: "delivered" | "seen";
+  onReply: (message: Message) => void;
+  onDelete: (messageId: string) => void;
 }
 
 const MessageItem = ({
@@ -18,6 +28,8 @@ const MessageItem = ({
   messages,
   selectedConvo,
   lastMessageStatus,
+  onReply,
+  onDelete,
 }: MessageItemProps) => {
   const prev = index + 1 < messages.length ? messages[index + 1] : undefined;
 
@@ -31,6 +43,43 @@ const MessageItem = ({
 
   const participant = selectedConvo.participants.find(
     (p: Participant) => p._id.toString() === message.senderId.toString()
+  );
+
+  const replyPreview = message.replyTo;
+  const hasImage = Boolean(message.imgUrl);
+  const hasText = Boolean(message.content?.trim());
+  const isImageOnly = hasImage && !hasText;
+
+  const renderActionMenu = () => (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="size-7 rounded-full opacity-0 group-hover/message:opacity-100 data-[state=open]:opacity-100 transition-opacity"
+        >
+          <EllipsisVertical className="size-4" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent
+        align={message.isOwn ? "end" : "start"}
+        side={message.isOwn ? "left" : "right"}
+      >
+        <DropdownMenuItem onClick={() => onReply(message)}>
+          <Reply className="size-4" />
+          Trả lời tin nhắn
+        </DropdownMenuItem>
+        {message.isOwn && (
+          <DropdownMenuItem
+            variant="destructive"
+            onClick={() => message._id && onDelete(message._id)}
+          >
+            <Trash2 className="size-4" />
+            Thu hồi tin nhắn
+          </DropdownMenuItem>
+        )}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 
   return (
@@ -61,36 +110,75 @@ const MessageItem = ({
           </div>
         )}
 
-        {/* tin nhắn */}
         <div
           className={cn(
-            "max-w-xs lg:max-w-md space-y-1 flex flex-col",
-            message.isOwn ? "items-end" : "items-start"
+            "group/message max-w-xs lg:max-w-md space-y-1 flex items-end gap-1",
+            message.isOwn ? "flex-row-reverse" : "flex-row"
           )}
         >
-          <Card
+          {renderActionMenu()}
+
+          {/* tin nhắn */}
+          <div
             className={cn(
-              "p-3",
-              message.isOwn ? "chat-bubble-sent border-0" : "chat-bubble-received"
+              "space-y-1 flex flex-col",
+              message.isOwn ? "items-end" : "items-start"
             )}
           >
-            <p className="text-sm leading-relaxed break-words">{message.content}</p>
-          </Card>
-
-          {/* seen/ delivered */}
-          {message.isOwn && message._id === selectedConvo.lastMessage?._id && (
-            <Badge
-              variant="outline"
+            <Card
               className={cn(
-                "text-xs px-1.5 py-0.5 h-4 border-0",
-                lastMessageStatus === "seen"
-                  ? "bg-primary/20 text-primary"
-                  : "bg-muted text-muted-foreground"
+                isImageOnly ? "p-0 bg-transparent border-0 shadow-none" : hasImage ? "p-1" : "p-3",
+                !isImageOnly &&
+                  (message.isOwn ? "chat-bubble-sent border-0" : "chat-bubble-received")
               )}
             >
-              {lastMessageStatus}
-            </Badge>
-          )}
+              {replyPreview && (
+                <div className="mb-2 rounded-md border border-primary/20 bg-primary/10 px-2 py-1 text-xs">
+                  <p className="font-medium text-primary/80">Tin nhắn được trả lời</p>
+                  <p className="text-muted-foreground break-words">
+                    {replyPreview.isDeleted
+                      ? "Tin nhắn đã bị thu hồi"
+                      : replyPreview.content || "[Tin nhắn ảnh]"}
+                  </p>
+                </div>
+              )}
+
+              {message.isDeleted ? (
+                <p className="text-sm italic text-muted-foreground">Tin nhắn đã bị thu hồi</p>
+              ) : (
+                <>
+                  {hasImage && (
+                    <img
+                      src={message.imgUrl || ""}
+                      alt="Hình ảnh tin nhắn"
+                      className="max-w-[240px] md:max-w-[320px] max-h-[320px] rounded-md object-cover"
+                      loading="lazy"
+                    />
+                  )}
+                  {hasText && (
+                    <p className={cn("text-sm leading-relaxed break-words", hasImage && "px-2 pb-2 pt-1")}>
+                      {message.content}
+                    </p>
+                  )}
+                </>
+              )}
+            </Card>
+
+            {/* seen/ delivered */}
+            {message.isOwn && message._id === selectedConvo.lastMessage?._id && (
+              <Badge
+                variant="outline"
+                className={cn(
+                  "text-xs px-1.5 py-0.5 h-4 border-0",
+                  lastMessageStatus === "seen"
+                    ? "bg-primary/20 text-primary"
+                    : "bg-muted text-muted-foreground"
+                )}
+              >
+                {lastMessageStatus}
+              </Badge>
+            )}
+          </div>
         </div>
       </div>
     </>

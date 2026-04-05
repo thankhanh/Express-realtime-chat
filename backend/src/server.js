@@ -16,6 +16,11 @@ import { v2 as cloudinary } from "cloudinary";
 
 dotenv.config();
 
+const normalizeEnvValue = (value) => {
+    if (!value) return "";
+    return value.trim().replace(/^['\"]|['\"]$/g, "");
+};
+
 // const app = express();
 const PORT = process.env.PORT || 5001;
 
@@ -23,12 +28,28 @@ const PORT = process.env.PORT || 5001;
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
+app.use("/uploads", express.static("uploads"));
 
 // CLOUDINARY Configuration
+const cloudName = normalizeEnvValue(process.env.CLOUDINARY_CLOUD_NAME);
+const cloudApiKey = normalizeEnvValue(process.env.CLOUDINARY_API_KEY);
+const cloudApiSecret = normalizeEnvValue(process.env.CLOUDINARY_API_SECRET);
+
+if (!cloudName || !cloudApiKey || !cloudApiSecret) {
+    throw new Error("Thiếu cấu hình Cloudinary trong .env");
+}
+
+if (cloudApiSecret.length < 20) {
+    console.warn(
+        "[Cloudinary] CLOUDINARY_API_SECRET có vẻ không hợp lệ (quá ngắn). " +
+            "Hãy kiểm tra lại secret trong Cloudinary Dashboard."
+    );
+}
+
 cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET,
+    cloud_name: cloudName,
+    api_key: cloudApiKey,
+    api_secret: cloudApiSecret,
 });
 
 // swagger

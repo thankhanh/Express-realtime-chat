@@ -15,7 +15,7 @@ const router = express.Router();
 
 router.post("/", checkFriendship, createConversation);              // tạo conversation
 router.get("/", getConversations);                                   // lấy danh sách
-router.get("/:conversationId/messages", getMessages);               // lấy tin nhắn
+router.get("/:conversationId/messages", getMessages);               // lấy tin nhắn (+ ?search=...)
 router.patch("/:conversationId/seen", markAsSeen);                  // đánh dấu đã đọc
 router.patch("/:conversationId/leave", leaveGroup);                 // rời nhóm
 router.patch("/:conversationId", updateGroup);                      // cập nhật tên nhóm

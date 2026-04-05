@@ -14,6 +14,7 @@ export const useChatStore = create<ChatState>()(
       convoLoading: false,
       messageLoading: false,
       loading: false,
+      replyingMessage: null,
       typingUsers: {}, // { conversationId: [{ userId, displayName }] }
 
       setActiveConversation: (id) => set({ activeConversationId: id }),
@@ -25,6 +26,7 @@ export const useChatStore = create<ChatState>()(
           activeConversationId: null,
           convoLoading: false,
           messageLoading: false,
+          replyingMessage: null,
           typingUsers: {},
         });
       },
@@ -88,14 +90,15 @@ export const useChatStore = create<ChatState>()(
         }
       },
 
-      sendDirectMessage: async (recipientId, content, imgUrl) => {
+      sendDirectMessage: async (recipientId, content, imgUrl, replyTo) => {
         try {
           const { activeConversationId } = get();
           await chatService.sendDirectMessage(
             recipientId,
             content,
             imgUrl,
-            activeConversationId || undefined
+            activeConversationId || undefined,
+            replyTo
           );
           set((state) => ({
             conversations: state.conversations.map((c) =>
@@ -107,9 +110,9 @@ export const useChatStore = create<ChatState>()(
         }
       },
 
-      sendGroupMessage: async (conversationId, content, imgUrl) => {
+      sendGroupMessage: async (conversationId, content, imgUrl, replyTo) => {
         try {
-          await chatService.sendGroupMessage(conversationId, content, imgUrl);
+          await chatService.sendGroupMessage(conversationId, content, imgUrl, replyTo);
           set((state) => ({
             conversations: state.conversations.map((c) =>
               c._id === get().activeConversationId ? { ...c, seenBy: [] } : c
@@ -277,6 +280,14 @@ export const useChatStore = create<ChatState>()(
         } finally {
           set({ loading: false });
         }
+      },
+
+      setReplyingMessage: (message) => {
+        set({ replyingMessage: message });
+      },
+
+      clearReplyingMessage: () => {
+        set({ replyingMessage: null });
       },
 
       // Typing indicator — thêm user đang nhập

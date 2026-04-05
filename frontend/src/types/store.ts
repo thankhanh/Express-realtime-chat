@@ -43,6 +43,7 @@ export interface ChatState {
   convoLoading: boolean;
   messageLoading: boolean;
   loading: boolean;
+  replyingMessage: Message | null;
   typingUsers: Record<string, { userId: string; displayName: string }[]>; // conversationId → typing users
   reset: () => void;
 
@@ -52,12 +53,14 @@ export interface ChatState {
   sendDirectMessage: (
     recipientId: string,
     content: string,
-    imgUrl?: string
+    imgUrl?: string,
+    replyTo?: string
   ) => Promise<void>;
   sendGroupMessage: (
     conversationId: string,
     content: string,
-    imgUrl?: string
+    imgUrl?: string,
+    replyTo?: string
   ) => Promise<void>;
   sendImageMessage: (file: File, conversationId?: string, recipientId?: string) => Promise<void>;
   deleteMessage: (messageId: string, conversationId: string) => Promise<void>;
@@ -71,6 +74,8 @@ export interface ChatState {
     name: string,
     memberIds: string[]
   ) => Promise<void>;
+  setReplyingMessage: (message: Message | null) => void;
+  clearReplyingMessage: () => void;
   setTypingUser: (conversationId: string, user: { userId: string; displayName: string }) => void;
   removeTypingUser: (conversationId: string, userId: string) => void;
 }

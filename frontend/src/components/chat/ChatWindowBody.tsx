@@ -3,6 +3,8 @@ import ChatWelcomeScreen from "./ChatWelcomeScreen";
 import MessageItem from "./MessageItem";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { toast } from "sonner";
+import type { Message } from "@/types/chat";
 
 const ChatWindowBody = () => {
   const {
@@ -10,6 +12,9 @@ const ChatWindowBody = () => {
     conversations,
     messages: allMessages,
     fetchMessages,
+    deleteMessage,
+    setReplyingMessage,
+    clearReplyingMessage,
   } = useChatStore();
   const [lastMessageStatus, setLastMessageStatus] = useState<"delivered" | "seen">(
     "delivered"
@@ -85,6 +90,29 @@ const ChatWindowBody = () => {
     }
   }, [messages.length]);
 
+  const handleReply = (message: Message) => {
+    setReplyingMessage(message);
+  };
+
+  const handleDelete = async (messageId: string) => {
+    if (!activeConversationId) {
+      return;
+    }
+
+    try {
+      await deleteMessage(messageId, activeConversationId);
+      toast.success("Đã thu hồi tin nhắn");
+    } catch (error) {
+      console.error("Lỗi khi thu hồi tin nhắn", error);
+      toast.error("Không thể thu hồi tin nhắn. Vui lòng thử lại.");
+    } finally {
+      const replyingMessage = useChatStore.getState().replyingMessage;
+      if (replyingMessage?._id === messageId) {
+        clearReplyingMessage();
+      }
+    }
+  };
+
   if (!selectedConvo) {
     return <ChatWelcomeScreen />;
   }
@@ -127,6 +155,8 @@ const ChatWindowBody = () => {
               messages={reversedMessages}
               selectedConvo={selectedConvo}
               lastMessageStatus={lastMessageStatus}
+              onReply={handleReply}
+              onDelete={handleDelete}
             />
           ))}
         </InfiniteScroll>

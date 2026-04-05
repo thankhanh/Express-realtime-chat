@@ -122,9 +122,16 @@ export const getConversations = async (req, res) => {
 export const getMessages = async (req, res) => {
     try {
         const { conversationId } = req.params;
-        const { limit = 50, cursor } = req.query;
+        const { limit = 50, cursor, search } = req.query;
 
         const query = { conversationId };
+
+        if (search && search.trim()) {
+            const escapedSearch = search
+                .trim()
+                .replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+            query.content = { $regex: escapedSearch, $options: "i" };
+        }
 
         if (cursor) {
             query.createdAt = { $lt: new Date(cursor) };

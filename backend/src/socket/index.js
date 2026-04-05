@@ -4,6 +4,7 @@ import express from "express";
 import { socketAuthMiddleware } from "../middlewares/socketMiddleware.js";
 import { getUserConversationsForSocketIO } from "../controllers/conversationController.js";
 
+// http.createServer
 const app = express();
 
 const server = http.createServer(app);
