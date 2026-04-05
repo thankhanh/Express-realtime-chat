@@ -335,9 +335,6 @@ export const uploadImageFromBuffer = (buffer, options = {}) => {
 **Yêu cầu:**
 **Lọc theo keyword:**  
    `GET /api/messages/:conversationId/search?q=xin+chào`  
-   Sử dụng:
-   ```js
-   { content: { $regex: q, $options: 'i' } }
 
 ---
 
