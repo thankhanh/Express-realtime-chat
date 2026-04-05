@@ -333,9 +333,11 @@ export const uploadImageFromBuffer = (buffer, options = {}) => {
 
 ### 🔴 Bài 8 — Lọc & Tìm kiếm Message (CRUD nâng cao)
 **Yêu cầu:**
-1. **Lọc theo keyword:** `GET /api/messages/:conversationId/search?q=xin+chào` — dùng `{ content: { $regex: q, $options: 'i' } }`.
-2. **Lọc theo ngày:** `GET /api/messages/:conversationId?from=2024-01-01&to=2024-01-31` — thêm điều kiện `createdAt` vào query.
-3. **Lọc chỉ ảnh:** `GET /api/messages/:conversationId?type=image` — thêm `{ imgUrl: { $exists: true, $ne: null } }`.
+**Lọc theo keyword:**  
+   `GET /api/messages/:conversationId/search?q=xin+chào`  
+   Sử dụng:
+   ```js
+   { content: { $regex: q, $options: 'i' } }
 
 ---
 
