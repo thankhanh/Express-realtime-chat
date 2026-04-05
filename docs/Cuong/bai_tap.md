@@ -337,17 +337,7 @@ export const uploadImageFromBuffer = (buffer, options = {}) => {
 
 ---
 
-### 🏆 Bài 9 — Thêm tính năng "Đang nhập..." (Typing Indicator)
-**Yêu cầu (Socket.IO thuần):**
-- Client emit event `"typing"` với `{ conversationId }` khi user gõ phím.
-- Server emit `"user-typing"` với `{ userId, displayName, conversationId }` đến tất cả trong room (trừ người gửi).
-- Client emit event `"stop-typing"` khi dừng gõ.
-- Server emit `"user-stop-typing"` đến room.
-- **Lưu ý:** Đã implement trong đồ án chính tại `socket/index.js` — chỉ cần tự viết lại để hiểu.
-
----
-
-### 🏆 Bài 10 — Reply / Trả lời tin nhắn (`replyTo`)
+### 🏆 Bài 9 — Reply / Trả lời tin nhắn (`replyTo`)
 **Yêu cầu:**
 1. Thêm trường `replyTo: ObjectId ref Message` vào schema, mặc định `null`.
 2. Khi gửi tin nhắn, client có thể gửi kèm `replyTo: messageId`.
@@ -357,7 +347,7 @@ export const uploadImageFromBuffer = (buffer, options = {}) => {
 
 ---
 
-### 🏆 Bài 11 — Thu hồi tin nhắn (Soft Delete)
+### 🏆 Bài 10 — Thu hồi tin nhắn (Soft Delete)
 **Yêu cầu:**
 1. Thêm trường `isDeleted: Boolean, default: false` vào schema.
 2. API `DELETE /api/messages/:messageId`:
