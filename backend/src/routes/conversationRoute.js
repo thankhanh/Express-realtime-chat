@@ -8,6 +8,7 @@ import {
     updateGroup,
     addGroupMembers,
     removeGroupMember,
+    deleteConversation,
 } from "../controllers/conversationController.js";
 import { checkFriendship } from "../middlewares/friendMiddleware.js";
 
@@ -21,5 +22,6 @@ router.patch("/:conversationId/leave", leaveGroup);                 // rời nh�
 router.patch("/:conversationId", updateGroup);                      // cập nhật tên nhóm
 router.patch("/:conversationId/members/add", addGroupMembers);      // thêm thành viên
 router.delete("/:conversationId/members/:memberId", removeGroupMember); // xóa thành viên
+router.delete("/:conversationId", deleteConversation);               // xóa cuộc hội thoại
 
 export default router;

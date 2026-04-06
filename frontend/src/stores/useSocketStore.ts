@@ -166,6 +166,13 @@ export const useSocketStore = create<SocketState>((set, get) => ({
         });
       }
     );
+
+    socket.on(
+      "conversation-deleted",
+      ({ conversationId }: { conversationId: string }) => {
+        useChatStore.getState().removeConversationLocally(conversationId);
+      }
+    );
   },
 
   disconnectSocket: () => {

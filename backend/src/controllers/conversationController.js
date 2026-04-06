@@ -425,3 +425,37 @@ export const removeGroupMember = async (req, res) => {
         return res.status(500).json({ message: "Lỗi hệ thống" });
     }
 };
+
+// ─────────────────────────────────────────────
+// Xóa cuộc hội thoại (Delete Conversation)
+// ─────────────────────────────────────────────
+export const deleteConversation = async (req, res) => {
+    try {
+        const { conversationId } = req.params;
+        const userId = req.user._id.toString();
+
+        const conversation = await Conversation.findById(conversationId);
+
+        if (!conversation) {
+            return res.status(404).json({ message: "Conversation không tồn tại" });
+        }
+
+        const isParticipant = conversation.participants.some(
+            (participant) => participant.userId.toString() === userId
+        );
+
+        if (!isParticipant) {
+            return res.status(403).json({ message: "Bạn không có quyền xóa cuộc hội thoại này" });
+        }
+
+        await Message.deleteMany({ conversationId });
+        await Conversation.findByIdAndDelete(conversationId);
+
+        io.to(conversationId).emit("conversation-deleted", { conversationId });
+
+        return res.sendStatus(204);
+    } catch (error) {
+        console.error("Lỗi khi xóa conversation", error);
+        return res.status(500).json({ message: "Lỗi hệ thống" });
+    }
+};

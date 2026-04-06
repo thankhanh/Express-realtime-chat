@@ -113,10 +113,10 @@ const MessageItem = ({
         <div
           className={cn(
             "group/message max-w-xs lg:max-w-md space-y-1 flex items-end gap-1",
-            message.isOwn ? "flex-row-reverse" : "flex-row"
+            message.isOwn ? "flex-row" : "flex-row-reverse"
           )}
         >
-          {renderActionMenu()}
+          {!message.isDeleted && renderActionMenu()}
 
           {/* tin nhắn */}
           <div
@@ -133,9 +133,9 @@ const MessageItem = ({
               )}
             >
               {replyPreview && (
-                <div className="mb-2 rounded-md border border-primary/20 bg-primary/10 px-2 py-1 text-xs">
-                  <p className="font-medium text-primary/80">Tin nhắn được trả lời</p>
-                  <p className="text-muted-foreground break-words">
+                <div className="mb-2 rounded-md border border-black/15 bg-black/10 px-2 py-1 text-xs">
+                  <p className="font-semibold text-foreground/95">Tin nhắn được trả lời</p>
+                  <p className="font-medium text-foreground/85 break-words">
                     {replyPreview.isDeleted
                       ? "Tin nhắn đã bị thu hồi"
                       : replyPreview.content || "[Tin nhắn ảnh]"}

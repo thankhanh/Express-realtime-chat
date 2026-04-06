@@ -4,10 +4,17 @@ import type { Conversation } from "@/types/chat";
 import ChatCard from "./ChatCard";
 import UnreadCountBadge from "./UnreadCountBadge";
 import GroupChatAvatar from "./GroupChatAvatar";
+import { toast } from "sonner";
 
 const GroupChatCard = ({ convo }: { convo: Conversation }) => {
   const { user } = useAuthStore();
-  const { activeConversationId, setActiveConversation, messages, fetchMessages } =
+  const {
+    activeConversationId,
+    setActiveConversation,
+    messages,
+    fetchMessages,
+    deleteConversation,
+  } =
     useChatStore();
 
   if (!user) return null;
@@ -18,6 +25,16 @@ const GroupChatCard = ({ convo }: { convo: Conversation }) => {
     setActiveConversation(id);
     if (!messages[id]) {
       await fetchMessages();
+    }
+  };
+
+  const handleDeleteConversation = async (id: string) => {
+    try {
+      await deleteConversation(id);
+      toast.success("Đã xóa cuộc hội thoại");
+    } catch (error) {
+      console.error("Lỗi xóa cuộc hội thoại", error);
+      toast.error("Không thể xóa cuộc hội thoại");
     }
   };
 
@@ -47,6 +64,7 @@ const GroupChatCard = ({ convo }: { convo: Conversation }) => {
           {convo.participants.length} thành viên
         </p>
       }
+      onDeleteConversation={handleDeleteConversation}
     />
   );
 };

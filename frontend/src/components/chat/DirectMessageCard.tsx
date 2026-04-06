@@ -7,10 +7,17 @@ import UserAvatar from "./UserAvatar";
 import StatusBadge from "./StatusBadge";
 import UnreadCountBadge from "./UnreadCountBadge";
 import { useSocketStore } from "@/stores/useSocketStore";
+import { toast } from "sonner";
 
 const DirectMessageCard = ({ convo }: { convo: Conversation }) => {
   const { user } = useAuthStore();
-  const { activeConversationId, setActiveConversation, messages, fetchMessages } =
+  const {
+    activeConversationId,
+    setActiveConversation,
+    messages,
+    fetchMessages,
+    deleteConversation,
+  } =
     useChatStore();
   const { onlineUsers } = useSocketStore();
 
@@ -26,6 +33,16 @@ const DirectMessageCard = ({ convo }: { convo: Conversation }) => {
     setActiveConversation(id);
     if (!messages[id]) {
       await fetchMessages();
+    }
+  };
+
+  const handleDeleteConversation = async (id: string) => {
+    try {
+      await deleteConversation(id);
+      toast.success("Đã xóa cuộc hội thoại");
+    } catch (error) {
+      console.error("Lỗi xóa cuộc hội thoại", error);
+      toast.error("Không thể xóa cuộc hội thoại");
     }
   };
 
@@ -66,6 +83,7 @@ const DirectMessageCard = ({ convo }: { convo: Conversation }) => {
           {lastMessage}
         </p>
       }
+      onDeleteConversation={handleDeleteConversation}
     />
   );
 };

@@ -147,6 +147,16 @@ export const useChatStore = create<ChatState>()(
         }
       },
 
+      deleteConversation: async (conversationId) => {
+        try {
+          await chatService.deleteConversation(conversationId);
+          get().removeConversationLocally(conversationId);
+        } catch (error) {
+          console.error("Lỗi xảy ra khi xóa cuộc hội thoại", error);
+          throw error;
+        }
+      },
+
       // Cập nhật local khi nhận socket event "delete-message"
       deleteMessageLocally: (messageId, conversationId) => {
         set((state) => {
@@ -165,6 +175,27 @@ export const useChatStore = create<ChatState>()(
                 ),
               },
             },
+          };
+        });
+      },
+
+      removeConversationLocally: (conversationId) => {
+        set((state) => {
+          const nextMessages = { ...state.messages };
+          delete nextMessages[conversationId];
+
+          const nextConversations = state.conversations.filter(
+            (conversation) => conversation._id !== conversationId
+          );
+
+          return {
+            conversations: nextConversations,
+            messages: nextMessages,
+            activeConversationId:
+              state.activeConversationId === conversationId
+                ? null
+                : state.activeConversationId,
+            replyingMessage: null,
           };
         });
       },

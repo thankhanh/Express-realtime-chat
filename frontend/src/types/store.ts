@@ -64,8 +64,10 @@ export interface ChatState {
   ) => Promise<void>;
   sendImageMessage: (file: File, conversationId?: string, recipientId?: string) => Promise<void>;
   deleteMessage: (messageId: string, conversationId: string) => Promise<void>;
+  deleteConversation: (conversationId: string) => Promise<void>;
   addMessage: (message: Message) => Promise<void>;
   deleteMessageLocally: (messageId: string, conversationId: string) => void;
+  removeConversationLocally: (conversationId: string) => void;
   updateConversation: (conversation: unknown) => void;
   markAsSeen: () => Promise<void>;
   addConvo: (convo: Conversation) => void;
