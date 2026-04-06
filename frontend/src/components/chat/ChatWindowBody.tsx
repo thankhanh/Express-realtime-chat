@@ -113,6 +113,15 @@ const ChatWindowBody = () => {
     }
   };
 
+  const handleJumpToMessage = (messageId: string) => {
+    const target = document.getElementById(`message-${messageId}`);
+    if (!target) {
+      return;
+    }
+
+    target.scrollIntoView({ behavior: "smooth", block: "center" });
+  };
+
   if (!selectedConvo) {
     return <ChatWelcomeScreen />;
   }
@@ -157,6 +166,7 @@ const ChatWindowBody = () => {
               lastMessageStatus={lastMessageStatus}
               onReply={handleReply}
               onDelete={handleDelete}
+              onJumpToMessage={handleJumpToMessage}
             />
           ))}
         </InfiniteScroll>

@@ -20,6 +20,7 @@ interface MessageItemProps {
   lastMessageStatus: "delivered" | "seen";
   onReply: (message: Message) => void;
   onDelete: (messageId: string) => void;
+  onJumpToMessage?: (messageId: string) => void;
 }
 
 const MessageItem = ({
@@ -30,6 +31,7 @@ const MessageItem = ({
   lastMessageStatus,
   onReply,
   onDelete,
+  onJumpToMessage,
 }: MessageItemProps) => {
   const prev = index + 1 < messages.length ? messages[index + 1] : undefined;
 
@@ -92,6 +94,7 @@ const MessageItem = ({
       )}
 
       <div
+        id={message._id ? `message-${message._id}` : undefined}
         className={cn(
           "flex gap-2 message-bounce mt-1",
           message.isOwn ? "justify-end" : "justify-start"
@@ -133,14 +136,18 @@ const MessageItem = ({
               )}
             >
               {replyPreview && (
-                <div className="mb-2 rounded-md border border-black/15 bg-black/10 px-2 py-1 text-xs">
+                <button
+                  type="button"
+                  onClick={() => replyPreview?._id && onJumpToMessage?.(replyPreview._id)}
+                  className="mb-2 w-full text-left rounded-md border border-black/15 bg-black/10 px-2 py-1 text-xs hover:bg-black/15 transition"
+                >
                   <p className="font-semibold text-foreground/95">Tin nhắn được trả lời</p>
                   <p className="font-medium text-foreground/85 break-words">
                     {replyPreview.isDeleted
                       ? "Tin nhắn đã bị thu hồi"
                       : replyPreview.content || "[Tin nhắn ảnh]"}
                   </p>
-                </div>
+                </button>
               )}
 
               {message.isDeleted ? (

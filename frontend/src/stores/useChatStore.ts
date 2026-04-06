@@ -171,7 +171,17 @@ export const useChatStore = create<ChatState>()(
                 items: existing.items.map((m) =>
                   m._id === messageId
                     ? { ...m, isDeleted: true, content: null, imgUrl: null }
-                    : m
+                    : m.replyTo?._id === messageId
+                      ? {
+                          ...m,
+                          replyTo: {
+                            ...m.replyTo,
+                            isDeleted: true,
+                            content: null,
+                            imgUrl: null,
+                          },
+                        }
+                      : m
                 ),
               },
             },
