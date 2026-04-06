@@ -18,11 +18,14 @@ import CreateNewChat from "../chat/CreateNewChat";
 import NewGroupChatModal from "../chat/NewGroupChatModal";
 import GroupChatList from "../chat/GroupChatList";
 import AddFriendModal from "../chat/AddFriendModal";
+import FriendListDialog from "../chat/FriendListDialog";
 import DirectMessageList from "../chat/DirectMessageList";
 import { useThemeStore } from "@/stores/useThemeStore";
 import { useAuthStore } from "@/stores/useAuthStore";
 import ConversationSkeleton from "../skeleton/ConversationSkeleton";
 import { useChatStore } from "@/stores/useChatStore";
+import FriendRequestBell from "../friendRequest/FriendRequestBell";
+import FriendListHorizontal from "../chat/FriendListHorizontal";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { isDark, toggleTheme } = useThemeStore();
@@ -54,6 +57,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                       className="data-[state=checked]:bg-background/80"
                     />
                     <Moon className="size-4 text-white/80" />
+                    <FriendRequestBell />
                   </div>
                 </div>
               </a>
@@ -64,10 +68,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
       {/* Content */}
       <SidebarContent className="beautiful-scrollbar">
-        {/* New Chat */}
-        <SidebarGroup>
+        {/* New Chat & Friend List Horizontal */}
+        <SidebarGroup className="py-2">
           <SidebarGroupContent>
             <CreateNewChat />
+            <FriendListHorizontal />
           </SidebarGroupContent>
         </SidebarGroup>
 
@@ -87,10 +92,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarGroup>
           <SidebarGroupLabel className="uppercase">bạn bè</SidebarGroupLabel>
           <SidebarGroupAction
-            title="Kết Bạn"
-            className="cursor-pointer"
+            title="Bạn bè & Kết bạn"
+            className="cursor-default hover:bg-transparent"
           >
-            <AddFriendModal />
+            <div className="flex items-center gap-2 pr-1">
+              <FriendListDialog />
+              <AddFriendModal />
+            </div>
           </SidebarGroupAction>
 
           <SidebarGroupContent>

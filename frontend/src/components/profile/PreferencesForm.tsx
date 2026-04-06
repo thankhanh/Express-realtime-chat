@@ -9,13 +9,34 @@ import {
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { useThemeStore } from "@/stores/useThemeStore";
-import { useState } from "react";
+import { useSocketStore } from "@/stores/useSocketStore";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { useState, useEffect } from "react";
 
 const PreferencesForm = () => {
   const { isDark, toggleTheme } = useThemeStore();
+  const { socket, onlineUsers } = useSocketStore();
+  const { user } = useAuthStore();
 
-  //   các bạn cần handle logic setOnlineStatus
-  const [onlineStatus, setOnlineStatus] = useState(false);
+  // Đồng bộ toggle với trạng thái online thực tế của user
+  const [onlineVisible, setOnlineVisible] = useState(() =>
+    user ? onlineUsers.includes(user._id) : false
+  );
+
+  // Cập nhật lại khi onlineUsers thay đổi (socket connect xong)
+  useEffect(() => {
+    if (user) {
+      setOnlineVisible(onlineUsers.includes(user._id));
+    }
+  }, [onlineUsers, user]);
+
+  const handleOnlineVisibilityChange = (checked: boolean) => {
+    setOnlineVisible(checked);
+    if (socket) {
+      // Emit tới server để broadcast cho tất cả client ngay lập tức
+      socket.emit("set-online-visibility", { visible: checked });
+    }
+  };
 
   return (
     <Card className="glass-strong border-border/30">
@@ -31,10 +52,7 @@ const PreferencesForm = () => {
         {/* Dark Mode */}
         <div className="flex items-center justify-between">
           <div>
-            <Label
-              htmlFor="theme-toggle"
-              className="text-base font-medium"
-            >
+            <Label htmlFor="theme-toggle" className="text-base font-medium">
               Chế độ tối
             </Label>
             <p className="text-sm text-muted-foreground">
@@ -53,23 +71,22 @@ const PreferencesForm = () => {
           </div>
         </div>
 
-        {/* Online Status */}
+        {/* Online Status Visibility */}
         <div className="flex items-center justify-between">
           <div>
-            <Label
-              htmlFor="online-status"
-              className="text-base font-medium"
-            >
+            <Label htmlFor="online-status" className="text-base font-medium">
               Hiển thị trạng thái online
             </Label>
             <p className="text-sm text-muted-foreground">
-              Cho phép người khác thấy khi bạn đang online
+              {onlineVisible
+                ? "Mọi người thấy bạn đang online"
+                : "Bạn đang ẩn trạng thái — người khác thấy bạn offline"}
             </p>
           </div>
           <Switch
             id="online-status"
-            checked={onlineStatus}
-            onCheckedChange={setOnlineStatus}
+            checked={onlineVisible}
+            onCheckedChange={handleOnlineVisibilityChange}
             className="data-[state=checked]:bg-primary-glow"
           />
         </div>

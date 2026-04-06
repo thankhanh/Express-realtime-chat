@@ -288,7 +288,7 @@ export const updateGroup = async (req, res) => {
     try {
         const { conversationId } = req.params;
         const userId = req.user._id;
-        const { name } = req.body;
+        const { name, avatarUrl } = req.body;
 
         const conversation = await Conversation.findById(conversationId);
 
@@ -300,29 +300,73 @@ export const updateGroup = async (req, res) => {
             return res.status(400).json({ message: "Chỉ nhóm mới có thể cập nhật" });
         }
 
-        // Chỉ admin mới được đổi tên
-        if (conversation.group.createdBy.toString() !== userId.toString()) {
-            return res.status(403).json({ message: "Chỉ admin mới được đổi tên nhóm" });
+        // Tạm thời cho phép mọi thành viên cập nhật (hoặc chỉ admin tùy bạn)
+        // Ở đây tôi để là mọi thành viên có thể cập nhật ảnh và tên nhóm chung
+        const isMember = conversation.participants.some(p => p.userId.toString() === userId.toString());
+        if (!isMember) {
+            return res.status(403).json({ message: "Bạn không phải thành viên nhóm" });
         }
 
-        if (!name || name.trim() === "") {
-            return res.status(400).json({ message: "Tên nhóm không được để trống" });
-        }
+        const updateData = {};
+        if (name) updateData["group.name"] = name.trim();
+        if (avatarUrl) updateData["group.avatarUrl"] = avatarUrl;
 
         const updated = await Conversation.findByIdAndUpdate(
             conversationId,
-            { $set: { "group.name": name.trim() } },
+            { $set: updateData },
             { new: true }
         );
 
         io.to(conversationId).emit("group-updated", {
             conversationId,
             name: updated.group.name,
+            avatarUrl: updated.group.avatarUrl,
         });
 
         return res.status(200).json({ conversation: updated });
     } catch (error) {
         console.error("Lỗi khi cập nhật nhóm", error);
+        return res.status(500).json({ message: "Lỗi hệ thống" });
+    }
+};
+
+export const uploadGroupAvatar = async (req, res) => {
+    try {
+        const { conversationId } = req.params;
+        const file = req.file;
+
+        if (!file) {
+            return res.status(400).json({ message: "Vui lòng chọn ảnh" });
+        }
+
+        const conversation = await Conversation.findById(conversationId);
+        if (!conversation || conversation.type !== "group") {
+            return res.status(404).json({ message: "Nhóm không tồn tại" });
+        }
+
+        const { uploadImageFromBuffer } = await import("../middlewares/uploadMiddleware.js");
+        const result = await uploadImageFromBuffer(file.buffer);
+
+        const updated = await Conversation.findByIdAndUpdate(
+            conversationId,
+            {
+                $set: {
+                    "group.avatarUrl": result.secure_url,
+                    "group.avatarId": result.public_id,
+                },
+            },
+            { new: true }
+        );
+
+        io.to(conversationId).emit("group-updated", {
+            conversationId,
+            name: updated.group.name,
+            avatarUrl: updated.group.avatarUrl,
+        });
+
+        return res.status(200).json({ avatarUrl: updated.group.avatarUrl });
+    } catch (error) {
+        console.error("Lỗi khi upload group avatar", error);
         return res.status(500).json({ message: "Lỗi hệ thống" });
     }
 };

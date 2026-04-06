@@ -100,8 +100,11 @@ export interface FriendState {
   acceptRequest: (requestId: string) => Promise<void>;
   declineRequest: (requestId: string) => Promise<void>;
   getFriends: () => Promise<void>;
+  addFriendRequestLocally: (request: FriendRequest) => void;
+  addFriendLocally: (friend: User) => void;
 }
 
 export interface UserState {
   updateAvatarUrl: (formData: FormData) => Promise<void>;
+  updateProfile: (data: { displayName?: string; bio?: string; phone?: string }) => Promise<any>;
 }

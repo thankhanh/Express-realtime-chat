@@ -99,10 +99,20 @@ export const chatService = {
     await api.patch(`/conversations/${conversationId}/leave`);
   },
 
-  // Đổi tên nhóm
-  async updateGroup(conversationId: string, name: string) {
-    const res = await api.patch(`/conversations/${conversationId}`, { name });
+  // Cập nhật thông tin nhóm (tên/avatarUrl)
+  async updateGroupInfo(conversationId: string, data: { name?: string; avatarUrl?: string }) {
+    const res = await api.patch(`/conversations/${conversationId}`, data);
     return res.data.conversation;
+  },
+
+  // Tải lên avatar nhóm
+  async uploadGroupAvatar(conversationId: string, file: File) {
+    const formData = new FormData();
+    formData.append("file", file);
+    const res = await api.post(`/conversations/${conversationId}/avatar`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return res.data.avatarUrl;
   },
 
   // Thêm thành viên vào nhóm

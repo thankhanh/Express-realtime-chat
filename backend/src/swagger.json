@@ -146,6 +146,89 @@
                     "Authentication"
                 ],
                 "responses": {}
+            },
+            "delete": {
+                "summary": "DeleteAccount",
+                "tags": [
+                    "Users"
+                ],
+                "responses": {},
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "password": { "type": "string" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/profile": {
+            "patch": {
+                "summary": "UpdateProfile",
+                "tags": [
+                    "Users"
+                ],
+                "responses": {},
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "displayName": { "type": "string" },
+                                    "bio": { "type": "string" },
+                                    "phone": { "type": "string" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/change-password": {
+            "patch": {
+                "summary": "ChangePassword",
+                "tags": [
+                    "Users"
+                ],
+                "responses": {},
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "oldPassword": { "type": "string" },
+                                    "newPassword": { "type": "string" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/search": {
+            "get": {
+                "summary": "SearchUsers",
+                "tags": [
+                    "Users"
+                ],
+                "parameters": [
+                    {
+                        "name": "username",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {}
             }
         },
         "/friends/requests": {

@@ -24,9 +24,9 @@ export const useFriendStore = create<FriendState>((set) => ({
       set({ loading: true });
       const resultMessage = await friendService.sendFriendRequest(to, message);
       return resultMessage;
-    } catch (error) {
+    } catch (error: any) {
       console.error("Lỗi xảy ra khi addFriend", error);
-      return "Lỗi xảy ra khi gửi kết bạn. Hãy thử lại";
+      throw new Error(error.response?.data?.message || "Lỗi xảy ra khi gửi kết bạn. Hãy thử lại");
     } finally {
       set({ loading: false });
     }
@@ -85,5 +85,19 @@ export const useFriendStore = create<FriendState>((set) => ({
     } finally {
       set({ loading: false });
     }
+  },
+
+  // Cập nhật khi nhận socket event
+  addFriendRequestLocally: (request: any) => {
+    set((state) => ({
+      receivedList: [request, ...state.receivedList]
+    }));
+  },
+
+  addFriendLocally: (friend: any) => {
+    set((state) => ({
+      friends: [friend, ...state.friends],
+      sentList: state.sentList.filter(s => s.to?._id !== friend._id)
+    }));
   },
 }));

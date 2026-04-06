@@ -19,6 +19,15 @@ const io = new Server(server, {
 io.use(socketAuthMiddleware);
 
 const onlineUsers = new Map(); // {userId: socketId}
+const hiddenUsers = new Set(); // userId của những người đang ẩn trạng thái
+
+// Broadcast danh sách online (loại bỏ người đang ẩn trạng thái)
+const broadcastOnlineUsers = () => {
+    const visibleIds = Array.from(onlineUsers.keys()).filter(
+        (id) => !hiddenUsers.has(id)
+    );
+    io.emit("online-users", visibleIds);
+};
 
 io.on("connection", async (socket) => {
     const user = socket.user;
@@ -27,7 +36,7 @@ io.on("connection", async (socket) => {
 
     onlineUsers.set(user._id.toString(), socket.id);
 
-    io.emit("online-users", Array.from(onlineUsers.keys()));
+    broadcastOnlineUsers();
 
     const conversationIds = await getUserConversationsForSocketIO(user._id);
     conversationIds.forEach((id) => {
@@ -38,7 +47,20 @@ io.on("connection", async (socket) => {
         socket.join(conversationId);
     });
 
-    // ── Typing Indicator ──────────────────────────────
+    // ── Online Visibility (real-time) ─────────────────────
+    socket.on("set-online-visibility", ({ visible }) => {
+        const userId = user._id.toString();
+        if (visible) {
+            hiddenUsers.delete(userId);
+        } else {
+            hiddenUsers.add(userId);
+        }
+        // Broadcast ngay cho tất cả client
+        broadcastOnlineUsers();
+    });
+    // ─────────────────────────────────────────────────────
+
+    // ── Typing Indicator ──────────────────────────────────
     socket.on("typing", ({ conversationId }) => {
         socket.to(conversationId).emit("user-typing", {
             userId: user._id,
@@ -53,13 +75,14 @@ io.on("connection", async (socket) => {
             conversationId,
         });
     });
-    // ─────────────────────────────────────────────────
+    // ─────────────────────────────────────────────────────
 
     socket.join(user._id.toString());
 
     socket.on("disconnect", () => {
         onlineUsers.delete(user._id.toString());
-        io.emit("online-users", Array.from(onlineUsers.keys()));
+        // Không cần xóa khỏi hiddenUsers khi disconnect (sẽ tự loại qua onlineUsers)
+        broadcastOnlineUsers();
         console.log(`socket disconnected: ${socket.id}`);
     });
 });

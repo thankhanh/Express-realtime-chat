@@ -27,6 +27,13 @@ const groupSchema = new mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
         },
+        avatarUrl: {
+            type: String,
+            default: "https://via.placeholder.com/150/FFFFFF/000000?text=GROUP",
+        },
+        avatarId: {
+            type: String,
+        },
     },
     {
         _id: false,

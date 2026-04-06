@@ -37,8 +37,14 @@ const userSchema = new mongoose.Schema(
     },
     phone: {
       type: String,
-      sparse: true, // cho phép null, nhưng không được trùng
+      sparse: true,
     },
+    blockedUsers: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
   },
   {
     timestamps: true,

@@ -37,6 +37,13 @@ export const sendDirectMessage = async (req, res) => {
                 lastMessageAt: new Date(),
                 unreadCounts: new Map(),
             });
+
+            // Emit new-conversation to recipient so it appears in their sidebar
+            const populatedConvo = await Conversation.findById(conversation._id)
+                .populate("participants.userId", "_id username displayName avatarUrl")
+                .lean();
+            
+            io.to(recipientId.toString()).emit("new-conversation", populatedConvo);
         }
 
         const message = await Message.create({
@@ -149,6 +156,13 @@ export const sendImageMessage = async (req, res) => {
                 lastMessageAt: new Date(),
                 unreadCounts: new Map(),
             });
+
+            // Emit new-conversation to recipient
+            const populatedConvo = await Conversation.findById(conversation._id)
+                .populate("participants.userId", "_id username displayName avatarUrl")
+                .lean();
+            
+            io.to(recipientId.toString()).emit("new-conversation", populatedConvo);
         }
 
         if (!conversation) {

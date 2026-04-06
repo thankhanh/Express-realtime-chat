@@ -3,6 +3,8 @@ import { io, type Socket } from "socket.io-client";
 import { useAuthStore } from "./useAuthStore";
 import type { SocketState } from "@/types/store";
 import { useChatStore } from "./useChatStore";
+import { useFriendStore } from "./useFriendStore";
+import { toast } from "sonner";
 
 const baseURL = import.meta.env.VITE_SOCKET_URL;
 
@@ -173,6 +175,45 @@ export const useSocketStore = create<SocketState>((set, get) => ({
         useChatStore.getState().removeConversationLocally(conversationId);
       }
     );
+
+    // ── Friend Requests ─────────────────────────────────────
+    socket.on("new-friend-request", ({ request }) => {
+      useFriendStore.getState().addFriendRequestLocally(request);
+      toast.info(`Bạn có lời mời kết bạn mới từ ${request.from.displayName}`);
+    });
+
+    socket.on("friend-request-accepted", ({ newFriend }) => {
+      useFriendStore.getState().addFriendLocally(newFriend);
+      toast.success(`${newFriend.displayName} đã chấp nhận lời mời kết bạn!`);
+    });
+
+    // ── User Profille Updated ────────────────────────────────
+    socket.on("user-updated", () => {
+      useChatStore.getState().fetchConversations();
+    });
+
+    // ── Group Updated ────────────────────────────────────────
+    socket.on("group-updated", () => {
+      useChatStore.getState().fetchConversations();
+    });
+
+    socket.on("member-added", () => {
+      useChatStore.getState().fetchConversations();
+    });
+
+    socket.on("member-left", () => {
+      useChatStore.getState().fetchConversations();
+    });
+
+    socket.on("member-removed", () => {
+      useChatStore.getState().fetchConversations();
+    });
+
+    // ── New Conversation ─────────────────────────────────────
+    socket.on("new-conversation", (conversation) => {
+      useChatStore.getState().addConvo(conversation);
+      socket.emit("join-conversation", conversation._id);
+    });
   },
 
   disconnectSocket: () => {
