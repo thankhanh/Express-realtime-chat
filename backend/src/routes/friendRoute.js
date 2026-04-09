@@ -8,6 +8,8 @@ import {
   getFriendRequests,
   cancelFriendRequest,
   deleteFriend,
+  getRelationshipStatus,
+  getMutualFriends,
 } from "../controllers/friendController.js";
 
 const router = express.Router();
@@ -20,6 +22,8 @@ router.post("/requests/:requestId/cancel", cancelFriendRequest);
 
 router.get("/", getAllFriends);
 router.get("/requests", getFriendRequests);
+router.get("/status/:targetUserId", getRelationshipStatus);
+router.get("/mutual/:targetUserId", getMutualFriends);
 router.delete("/:friendId", deleteFriend);
 
 export default router;

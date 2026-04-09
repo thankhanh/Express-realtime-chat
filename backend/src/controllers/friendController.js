@@ -262,3 +262,100 @@ export const deleteFriend = async (req, res) => {
     return res.status(500).json({ message: "Lỗi hệ thống" });
   }
 };
+
+export const getRelationshipStatus = async (req, res) => {
+  try {
+    const userId = req.user._id.toString();
+    const { targetUserId } = req.params;
+
+    if (userId === targetUserId) {
+      return res.status(200).json({ status: "none" });
+    }
+
+    let userA = userId;
+    let userB = targetUserId.toString();
+
+    if (userA > userB) {
+      [userA, userB] = [userB, userA];
+    }
+
+    const [friendship, sentRequest, receivedRequest] = await Promise.all([
+      Friend.findOne({ userA, userB }).select("_id").lean(),
+      FriendRequest.findOne({ from: userId, to: targetUserId })
+        .select("_id")
+        .lean(),
+      FriendRequest.findOne({ from: targetUserId, to: userId })
+        .select("_id")
+        .lean(),
+    ]);
+
+    if (friendship) {
+      return res.status(200).json({ status: "friend" });
+    }
+
+    if (sentRequest) {
+      return res.status(200).json({ status: "request_sent" });
+    }
+
+    if (receivedRequest) {
+      return res.status(200).json({ status: "request_received" });
+    }
+
+    return res.status(200).json({ status: "none" });
+  } catch (error) {
+    console.error("Lỗi khi lấy trạng thái quan hệ", error);
+    return res.status(500).json({ message: "Lỗi hệ thống" });
+  }
+};
+
+const getFriendIds = async (userId) => {
+  const friendships = await Friend.find({
+    $or: [{ userA: userId }, { userB: userId }],
+  })
+    .select("userA userB")
+    .lean();
+
+  return friendships.map((f) =>
+    f.userA.toString() === userId.toString()
+      ? f.userB.toString()
+      : f.userA.toString(),
+  );
+};
+
+export const getMutualFriends = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const { targetUserId } = req.params;
+
+    const targetExists = await User.exists({ _id: targetUserId });
+
+    if (!targetExists) {
+      return res.status(404).json({ message: "Người dùng không tồn tại" });
+    }
+
+    const [myFriendIds, targetFriendIds] = await Promise.all([
+      getFriendIds(userId),
+      getFriendIds(targetUserId),
+    ]);
+
+    if (!myFriendIds.length || !targetFriendIds.length) {
+      return res.status(200).json({ mutualFriends: [] });
+    }
+
+    const targetFriendSet = new Set(targetFriendIds);
+    const mutualIds = myFriendIds.filter((id) => targetFriendSet.has(id));
+
+    if (!mutualIds.length) {
+      return res.status(200).json({ mutualFriends: [] });
+    }
+
+    const mutualFriends = await User.find({ _id: { $in: mutualIds } })
+      .select("_id displayName avatarUrl username")
+      .lean();
+
+    return res.status(200).json({ mutualFriends });
+  } catch (error) {
+    console.error("Lỗi khi lấy danh sách bạn chung", error);
+    return res.status(500).json({ message: "Lỗi hệ thống" });
+  }
+};
