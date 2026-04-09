@@ -153,6 +153,7 @@ export const declineFriendRequest = async (req, res) => {
 export const getAllFriends = async (req, res) => {
   try {
     const userId = req.user._id;
+    const search = (req.query.search || "").toString().trim().toLowerCase();
 
     const friendships = await Friend.find({
       $or: [
@@ -176,7 +177,13 @@ export const getAllFriends = async (req, res) => {
       f.userA._id.toString() === userId.toString() ? f.userB : f.userA,
     );
 
-    return res.status(200).json({ friends });
+    const filteredFriends = search
+      ? friends.filter((friend) =>
+          (friend.displayName || "").toLowerCase().includes(search),
+        )
+      : friends;
+
+    return res.status(200).json({ friends: filteredFriends });
   } catch (error) {
     console.error("Lỗi khi lấy danh sách bạn bè", error);
     return res.status(500).json({ message: "Lỗi hệ thống" });
@@ -226,6 +233,32 @@ export const cancelFriendRequest = async (req, res) => {
     return res.sendStatus(204);
   } catch (error) {
     console.error("Lỗi khi hủy lời mời kết bạn", error);
+    return res.status(500).json({ message: "Lỗi hệ thống" });
+  }
+};
+
+export const deleteFriend = async (req, res) => {
+  try {
+    const userId = req.user._id.toString();
+    const { friendId } = req.params;
+
+    let userA = userId;
+    let userB = friendId.toString();
+
+    // Chuẩn hóa thứ tự giống pre-save hook: userA < userB
+    if (userA > userB) {
+      [userA, userB] = [userB, userA];
+    }
+
+    const deletedFriend = await Friend.findOneAndDelete({ userA, userB });
+
+    if (!deletedFriend) {
+      return res.status(404).json({ message: "Không tìm thấy quan hệ bạn bè" });
+    }
+
+    return res.sendStatus(204);
+  } catch (error) {
+    console.error("Lỗi khi xóa bạn bè", error);
     return res.status(500).json({ message: "Lỗi hệ thống" });
   }
 };

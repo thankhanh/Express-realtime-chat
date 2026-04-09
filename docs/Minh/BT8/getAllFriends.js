@@ -1,6 +1,7 @@
 export const getAllFriends = async (req, res) => {
   try {
     const userId = req.user._id;
+    const search = (req.query.search || "").toString().trim().toLowerCase();
 
     const friendships = await Friend.find({
       $or: [
@@ -24,7 +25,13 @@ export const getAllFriends = async (req, res) => {
       f.userA._id.toString() === userId.toString() ? f.userB : f.userA,
     );
 
-    return res.status(200).json({ friends });
+    const filteredFriends = search
+      ? friends.filter((friend) =>
+          (friend.displayName || "").toLowerCase().includes(search),
+        )
+      : friends;
+
+    return res.status(200).json({ friends: filteredFriends });
   } catch (error) {
     console.error("Lỗi khi lấy danh sách bạn bè", error);
     return res.status(500).json({ message: "Lỗi hệ thống" });
