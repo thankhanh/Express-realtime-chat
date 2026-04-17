@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-
+//Khai báo schema cho tin nhắn trong cuộc trò chuyện
 const messageSchema = new mongoose.Schema(
     {
         conversationId: {

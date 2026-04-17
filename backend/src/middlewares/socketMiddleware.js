@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 
+//xác thực người dùng khi kết nối Socket.IO (WebSocket)
 export const socketAuthMiddleware = async (socket, next) => {
     try {
         const token = socket.handshake.auth?.token;

@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-
+//Người tham gia cuộc trò chuyện
 const participantSchema = new mongoose.Schema(
     {
         userId: {
@@ -16,7 +16,7 @@ const participantSchema = new mongoose.Schema(
         _id: false,
     }
 );
-
+//Thông tin nhóm trong cuộc trò chuyện nhóm
 const groupSchema = new mongoose.Schema(
     {
         name: {
@@ -39,7 +39,7 @@ const groupSchema = new mongoose.Schema(
         _id: false,
     }
 );
-
+//Khai báo schema cho tin nhắn cuối cùng trong cuộc trò chuyện
 const lastMessageSchema = new mongoose.Schema(
     {
         _id: { type: String },
@@ -60,7 +60,7 @@ const lastMessageSchema = new mongoose.Schema(
         _id: false,
     }
 );
-
+//Khai báo schema cho cuộc trò chuyện
 const conversationSchema = new mongoose.Schema(
     {
         type: {
